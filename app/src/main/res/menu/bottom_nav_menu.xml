@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_discovery"
+        android:icon="@drawable/ic_discovery"
+        android:title="Discovery" />
+
+    <item
+        android:id="@+id/navigation_ranking"
+        android:icon="@drawable/ic_ranking"
+        android:title="Ranking" />
+
+    <item
+        android:id="@+id/navigation_journey"
+        android:icon="@drawable/ic_journey"
+        android:title="Journey" />
+
+    <item
+        android:id="@+id/navigation_account"
+        android:icon="@drawable/ic_account"
+        android:title="Account" />
+
+    <item
+        android:id="@+id/navigation_chatbot"
+        android:icon="@drawable/ic_chatbot"
+        android:title="Chatbot" />
+
+</menu>
