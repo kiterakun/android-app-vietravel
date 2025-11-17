@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.journey.favoriteLocation.FavoriteLocationFragment">
 
-    <TextView
+    <ListView
+        android:id="@+id/list_view_place"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

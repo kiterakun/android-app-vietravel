@@ -8,10 +8,10 @@ material = "1.13.0"
 constraintlayout = "2.2.1"
 lifecycleLivedataKtx = "2.9.4"
 lifecycleViewmodelKtx = "2.9.4"
-navigationFragment = "2.6.0"
-navigationUi = "2.6.0"
+navigationFragment = "2.9.6"
+navigationUi = "2.9.6"
 legacySupportV4 = "1.0.0"
-annotation = "1.6.0"
+annotation = "1.9.1"
 activity = "1.11.0"
 
 [libraries]

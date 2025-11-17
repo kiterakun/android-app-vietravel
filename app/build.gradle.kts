@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -49,4 +51,18 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+
+    // Thư viện Google Maps
+    implementation("com.google.android.gms:play-services-maps:19.2.0")
+
+    // Thư viện Places
+    implementation("com.google.android.libraries.places:places:5.0.0")
+    // Thư viện dung de load anh
+    implementation("com.github.bumptech.glide:glide:5.0.5")
 }

@@ -4,16 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.group6.vietravel.data.models.Place;
+
+
 public class MainViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private MutableLiveData<Place> selectedPlace;
 
     public MainViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        selectedPlace = new MutableLiveData<Place>();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<Place> getSelectedPlace() {
+
+        return selectedPlace;
+    }
+
+    public void selectPlace(Place place){
+        selectedPlace.setValue(place);
     }
 }

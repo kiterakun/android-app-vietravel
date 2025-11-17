@@ -1,4 +1,4 @@
-package com.group6.vietravel.ui.main.journey.saveLocation;
+package com.group6.vietravel.ui.detail.evaluate;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,24 +14,24 @@ import android.view.ViewGroup;
 
 import com.group6.vietravel.R;
 
-public class SaveLocationFragment extends Fragment {
+public class EvaluateFragment extends Fragment {
 
-    private SaveLocationViewModel mViewModel;
+    private EvaluateViewModel mViewModel;
 
-    public static SaveLocationFragment newInstance() {
-        return new SaveLocationFragment();
+    public static EvaluateFragment newInstance() {
+        return new EvaluateFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_save_location, container, false);
+        return inflater.inflate(R.layout.fragment_evaluate, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(SaveLocationViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(EvaluateViewModel.class);
         // TODO: Use the ViewModel
     }
 

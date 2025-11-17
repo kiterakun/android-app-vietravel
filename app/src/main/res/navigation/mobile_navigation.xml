@@ -9,7 +9,8 @@
         android:id="@+id/navigation_discovery"
         android:name="com.group6.vietravel.ui.main.discovery.DiscoveryFragment"
         android:label="Discovery"
-        tools:layout="@layout/fragment_discovery" />
+        tools:layout="@layout/fragment_discovery"
+        />
 
     <fragment
         android:id="@+id/navigation_ranking"
@@ -34,4 +35,5 @@
         android:name="com.group6.vietravel.ui.main.chatbot.ChatbotFragment"
         android:label="Chatbot"
         tools:layout="@layout/fragment_chatbot" />
+
 </navigation>

@@ -1,4 +1,4 @@
-package com.group6.vietravel.ui.main.detail;
+package com.group6.vietravel.ui.detail.description;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,24 +14,24 @@ import android.view.ViewGroup;
 
 import com.group6.vietravel.R;
 
-public class DetailFragment extends Fragment {
+public class DescriptionFragment extends Fragment {
 
-    private DetailViewModel mViewModel;
+    private DescriptionViewModel mViewModel;
 
-    public static DetailFragment newInstance() {
-        return new DetailFragment();
+    public static DescriptionFragment newInstance() {
+        return new DescriptionFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail, container, false);
+        return inflater.inflate(R.layout.fragment_description, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(DescriptionViewModel.class);
         // TODO: Use the ViewModel
     }
 
