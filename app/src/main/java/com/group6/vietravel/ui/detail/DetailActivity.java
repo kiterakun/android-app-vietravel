@@ -20,6 +20,7 @@ import com.group6.vietravel.ui.detail.overview.OverViewFragment;
 public class DetailActivity extends AppCompatActivity {
     private ImageView imagePlace;
     private TextView ratingAvg;
+    private TextView namePlaceTextView;
     private ImageView back;
 
     @Override
@@ -33,6 +34,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         imagePlace = findViewById(R.id.imagePlace);
+        namePlaceTextView = findViewById(R.id.namePlaceTextView);
         ratingAvg = findViewById(R.id.ratingAvg);
         back = findViewById(R.id.back);
 
@@ -69,6 +71,7 @@ public class DetailActivity extends AppCompatActivity {
                     .load(imageUrl) // Tải từ URL
                     .into(imagePlace); // Đặt vào ImageView
         }
+        namePlaceTextView.setText(place.getName());
 
         ratingAvg.setText(String.format("%.1f", place.getRating_avg()));
     }
