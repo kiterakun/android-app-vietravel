@@ -49,6 +49,9 @@ public class PlaceRepository {
     // Constructor (private để đảm bảo là Singleton)
     private PlaceRepository(Context context) {
         db = FirebaseFirestore.getInstance();
+        db.disableNetwork()
+                .addOnSuccessListener(aVoid->FirebaseFirestore.getInstance().enableNetwork());
+
         auth = FirebaseAuth.getInstance(); // Sau này làm đăng nhập sẽ sửa
         allPlacesLiveData = new MutableLiveData<>();
         favoritePlacesLiveData = new MutableLiveData<>();
@@ -96,6 +99,7 @@ public class PlaceRepository {
                     if (value != null) {
                         List<Place> places = value.toObjects(Place.class);
                         allPlacesLiveData.postValue(places);
+                        Log.v("fetchAllPlaces", " Thành công ");
                     }
                 });
     }
