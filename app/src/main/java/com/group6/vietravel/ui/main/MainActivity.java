@@ -10,8 +10,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -34,9 +38,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.container), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right,0);
+            return insets;
+        });
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -58,33 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    public boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
-
-        if (status == ConnectionResult.SUCCESS) {
-            // Dịch vụ đã sẵn sàng, không có vấn đề gì
-            return true;
-        } else if (googleApiAvailability.isUserResolvableError(status)) {
-            // Có lỗi nhưng người dùng có thể tự sửa được.
-            // Hiển thị một Dialog chuẩn do Google cung cấp để hướng dẫn người dùng.
-            Dialog errorDialog = googleApiAvailability.getErrorDialog(
-                    this,           // Activity hiện tại
-                    status,         // Mã lỗi
-                    ERROR_DIALOG_REQUEST // Mã yêu cầu để xử lý kết quả
-            );
-            if (errorDialog != null) {
-                errorDialog.show();
-            }
-        } else {
-            // Có lỗi nhưng không thể khắc phục (ví dụ: thiết bị không tương thích).
-            // Thông báo cho người dùng và vô hiệu hóa các tính năng liên quan.
-            Toast.makeText(this, "Thiết bị này không được hỗ trợ Google Play Services", Toast.LENGTH_LONG).show();
-        }
-
-        return false;
     }
 
 }

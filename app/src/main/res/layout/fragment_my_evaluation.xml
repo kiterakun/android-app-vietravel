@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.journey.myEvaluation.MyEvaluationFragment">
 
-    <TextView
+    <ListView
+        android:id="@+id/list_view_review"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello"
-        android:background="@color/black"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_rounded_corners_8dp"/>
 
 </FrameLayout>

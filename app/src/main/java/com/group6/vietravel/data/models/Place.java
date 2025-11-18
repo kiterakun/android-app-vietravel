@@ -66,6 +66,11 @@ public class Place implements Parcelable {
         dest.writeString(google_place_id);
         dest.writeString(cached_image_url);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
     //code bắt buộc của Parcelable
 
     public Place() {
@@ -119,11 +124,6 @@ public class Place implements Parcelable {
 
     public void setCached_image_url(String cached_image_url) {
         this.cached_image_url = cached_image_url;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 }
 
