@@ -60,6 +60,8 @@
                                 android:layout_marginEnd="8dp"
                                 android:src="@drawable/ic_detail_favorite"
                                 android:scaleType="fitXY"
+                                android:clickable="true"
+                                android:focusable="true"
                                 />
 
                             <ImageView
@@ -68,6 +70,8 @@
                                 android:layout_height="match_parent"
                                 android:src="@drawable/ic_detail_visited"
                                 android:scaleType="fitXY"
+                                android:clickable="true"
+                                android:focusable="true"
                                 />
                         </LinearLayout>
                     </LinearLayout>
@@ -233,6 +237,7 @@
                     android:gravity="center"
                     android:background="@color/blue"
                     android:paddingVertical="18dp"
+                    android:layout_marginBottom="20dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:orientation="horizontal">

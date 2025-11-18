@@ -2,7 +2,6 @@ package com.group6.vietravel.data.models;
 
 import com.google.firebase.firestore.DocumentId;
 
-// Model cho collection "categories"
 public class Category {
 
     @DocumentId

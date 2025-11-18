@@ -4,8 +4,11 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,7 +55,7 @@ public class PlaceRepository {
         db.disableNetwork()
                 .addOnSuccessListener(aVoid->FirebaseFirestore.getInstance().enableNetwork());
 
-        auth = FirebaseAuth.getInstance(); // Sau này làm đăng nhập sẽ sửa
+        auth = FirebaseAuth.getInstance();
         allPlacesLiveData = new MutableLiveData<>();
         favoritePlacesLiveData = new MutableLiveData<>();
         visitedPlacesLiveData = new MutableLiveData<>();
@@ -65,6 +68,8 @@ public class PlaceRepository {
         placesClient = Places.createClient(context.getApplicationContext());
 
         fetchAllPlaces();
+        fetchFavoritePlaces();
+        fetchVisitedPlaces();
     }
 
     // Phương thức để lấy thể hiện (instance) duy nhất của Repository
@@ -99,7 +104,6 @@ public class PlaceRepository {
                     if (value != null) {
                         List<Place> places = value.toObjects(Place.class);
                         allPlacesLiveData.postValue(places);
-                        Log.v("fetchAllPlaces", " Thành công ");
                     }
                 });
     }
@@ -121,7 +125,7 @@ public class PlaceRepository {
                         return;
                     }
                     if (value != null) {
-                        // Lấy ra danh sách ID các địa điểm yêu thích
+                        // Lấy ra danh sách ID
                         List<String> favoriteIds = new ArrayList<>();
                         for (DocumentSnapshot doc : value.getDocuments()) {
                             favoriteIds.add(doc.getId());
@@ -191,22 +195,16 @@ public class PlaceRepository {
             return photoBitmapLiveData;
         }
 
-        // Bi trung ten model voi api google map nen phai ghi day du ra de nhan dien
         final List<com.google.android.libraries.places.api.model.Place.Field> placeFields =
                 Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.PHOTO_METADATAS);
 
 
-        // B. Tạo yêu cầu lấy thông tin địa điểm
         final FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(googlePlaceId, placeFields);
 
-        // ===================================
-        // C. GỌI API LẦN 1: fetchPlace
-        // ===================================
         placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
 
             final com.google.android.libraries.places.api.model.Place place = response.getPlace();
 
-            // D. Lấy danh sách metadata của ảnh
             final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
             if (metadata == null || metadata.isEmpty()) {
                 Log.w(TAG, "Không tìm thấy ảnh cho placeId: " + googlePlaceId);
@@ -214,18 +212,13 @@ public class PlaceRepository {
                 return;
             }
 
-            // Lấy ảnh đầu tiên trong danh sách
             final PhotoMetadata photoMetadata = metadata.get(0);
 
-            // E. Tạo yêu cầu tải ảnh thực tế (Bitmap)
             final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
                     .setMaxWidth(500) // Tùy chỉnh kích thước bạn muốn
                     .setMaxHeight(300)
                     .build();
 
-            // ===================================
-            // F. GỌI API LẦN 2: fetchPhoto
-            // ===================================
             placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
                 Bitmap bitmap = fetchPhotoResponse.getBitmap();
 
@@ -291,8 +284,72 @@ public class PlaceRepository {
     }
 
 
-    // TODO: Thêm các phương thức ghi (add/remove favorite, add visited...)
-    // Ví dụ:
-    // public void addFavorite(String placeId) { ... }
-    // public void removeFavorite(String placeId) { ... }
+    public void addFavorite(String placeId) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            Log.e("addFavorite","Người dùng chưa đăng nhập");
+            return;
+        }
+
+        String userId = user.getUid();
+
+        Favorite newFavorite = new Favorite();
+
+        DocumentReference favoriteRef = db.collection("users").document(userId)
+                .collection("favorites").document(placeId);
+
+        favoriteRef.set(newFavorite);
+
+    }
+
+    public void removeFavorite(String placeId) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            Log.e("removeFavorite","Người dùng chưa đăng nhập");
+            return;
+        }
+
+        String userId = user.getUid();
+
+        DocumentReference favoriteRef = db.collection("users").document(userId)
+                .collection("favorites").document(placeId);
+
+        favoriteRef.delete();
+
+    }
+
+    public void addVisited(String placeId) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            Log.e("addVisited","Người dùng chưa đăng nhập");
+            return;
+        }
+
+        String userId = user.getUid();
+
+        VisitedPlace newVisitedPlace = new VisitedPlace();
+
+        DocumentReference favoriteRef = db.collection("users").document(userId)
+                .collection("visited_places").document(placeId);
+
+        favoriteRef.set(newVisitedPlace);
+
+    }
+
+
+    public void removeVisited(String placeId) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            Log.e("removeVisited","Người dùng chưa đăng nhập");
+            return;
+        }
+
+        String userId = user.getUid();
+
+        DocumentReference favoriteRef = db.collection("users").document(userId)
+                .collection("visited_places").document(placeId);
+
+        favoriteRef.delete();
+
+    }
 }
