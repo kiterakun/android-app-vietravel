@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +35,7 @@ public class FavoriteLocationFragment extends Fragment {
     private FavoriteLocationViewModel mViewModel;
 
     private MainViewModel mainViewModel;
-    private ListView list_view_place;
+    private RecyclerView recycler_view_place;
     private PlaceAdapter adapter;
 
     public static FavoriteLocationFragment newInstance() {
@@ -51,9 +53,10 @@ public class FavoriteLocationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
 
-        list_view_place = view.findViewById(R.id.list_view_place);
+        recycler_view_place = view.findViewById(R.id.recycler_view_place);
         adapter = new PlaceAdapter(getContext(),new ArrayList<>());
-        list_view_place.setAdapter(adapter);
+        recycler_view_place.setAdapter(adapter);
+        recycler_view_place.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mViewModel = new ViewModelProvider(this).get(FavoriteLocationViewModel.class);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
@@ -65,11 +68,10 @@ public class FavoriteLocationFragment extends Fragment {
             }
         });
 
-        list_view_place.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter.setOnItemClickListener(new PlaceAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Place selectedPlace = (Place) parent.getItemAtPosition(position);
-                mainViewModel.selectPlace(selectedPlace);
+            public void onItemClick(Place place) {
+                mainViewModel.selectPlace(place);
             }
         });
 

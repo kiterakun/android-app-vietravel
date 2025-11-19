@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.group6.vietravel.models.User;
+import com.group6.vietravel.data.models.User;
 
 import com.group6.vietravel.data.repositorys.AuthRepository;
 
@@ -20,7 +20,7 @@ public class AuthViewModel extends AndroidViewModel {
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
-        authRepository = AuthRepository.getInstance(application);
+        authRepository = AuthRepository.getInstance();
 
         userLiveData = authRepository.getUserLiveData();
         errorLiveData = authRepository.getErrorLiveData();

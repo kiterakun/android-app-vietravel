@@ -13,12 +13,16 @@ import com.google.firebase.firestore.Query;
 import com.group6.vietravel.data.models.Review;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ReviewRepository {
     private static final String TAG = "ReviewRepository";
     private static ReviewRepository instance;
-    private MutableLiveData<List<Review>> allUserReviewLiveData;
+    private final MutableLiveData<List<Review>> allUserReviewLiveData;
+
+    private final MutableLiveData<List<Review>> allReviewPlaceLiveData;
+
 
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
@@ -27,6 +31,8 @@ public class ReviewRepository {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         allUserReviewLiveData = new MutableLiveData<>();
+        allReviewPlaceLiveData = new MutableLiveData<>();
+
         fetchAllUserReview();
     }
 
@@ -39,6 +45,10 @@ public class ReviewRepository {
 
     public LiveData<List<Review>> getAllUserReview(){
         return allUserReviewLiveData;
+    }
+
+    public LiveData<List<Review>> getAllReviewPlace(){
+        return allReviewPlaceLiveData;
     }
 
     public void fetchAllUserReview(){
@@ -69,4 +79,43 @@ public class ReviewRepository {
                     }
                 });
     }
+
+    public void fetchAllReviewPlace(String placeId) {
+        db.collection("reviews").whereEqualTo("status", "approved")
+                .whereEqualTo("place_id",placeId)
+                .orderBy("created_at", Query.Direction.DESCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.e("Firestore", "Lỗi lắng nghe", error);
+                        return;
+                    }
+                    if(value!=null){
+                        List<Review> reviewList = value.toObjects(Review.class);
+                        allReviewPlaceLiveData.postValue(reviewList);
+                        Log.d("Firestore", "Đã tải " + reviewList.size() + " bài đánh giá.");
+                    }
+                    else {
+                        allReviewPlaceLiveData.postValue(new ArrayList<>());
+                    }
+                });
+    }
+
+    public void saveNewReviewPlace(Review review){
+        if (review.getCreated_at() == null) {
+            review.setCreated_at(new Date());
+        }
+        review.setCreated_at(new Date());
+        if(review.getReviewId()!= null && !review.getReviewId().isEmpty()) {
+            db.collection("reviews").document(review.getReviewId()).set(review)
+                    .addOnSuccessListener(aVoid -> Log.d("Firestore", "Update thanh cong "))
+                    .addOnFailureListener(e -> Log.e("Firestore", "Loi", e));
+
+        }
+        else{
+            db.collection("reviews").add(review)
+                    .addOnSuccessListener(aVoid -> Log.d("Firestore", "Add thanh cong "))
+                    .addOnFailureListener(e -> Log.e("Firestore", "Loi", e));
+        }
+    }
+
 }

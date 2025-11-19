@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +34,7 @@ public class MyEvaluationFragment extends Fragment {
 
     private MyEvaluationViewModel mViewModel;
     private MainViewModel mainViewModel;
-    private ListView list_view_review;
+    private RecyclerView recycler_view_review;
     private ReviewAdapter adapter;
 
     public static MyEvaluationFragment newInstance() {
@@ -48,9 +50,10 @@ public class MyEvaluationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
 
-        list_view_review = view.findViewById(R.id.list_view_review);
+        recycler_view_review = view.findViewById(R.id.recycler_view_review);
         adapter = new ReviewAdapter(getContext(),new ArrayList<>());
-        list_view_review.setAdapter(adapter);
+        recycler_view_review.setAdapter(adapter);
+        recycler_view_review.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mViewModel = new ViewModelProvider(this).get(MyEvaluationViewModel.class);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
@@ -62,11 +65,10 @@ public class MyEvaluationFragment extends Fragment {
             }
         });
 
-        list_view_review.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter.setOnItemClickListener(new ReviewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Review selectedReview = (Review) parent.getItemAtPosition(position);
-                PlaceUtils.getPlaceById(selectedReview.getPlaceId(), new PlaceUtils.OnPlaceLoadedCallback() {
+            public void onItemClick(Review review) {
+                PlaceUtils.getPlaceById(review.getPlaceId(), new PlaceUtils.OnPlaceLoadedCallback() {
                     @Override
                     public void onPlaceLoaded(Place place) {
                         mainViewModel.selectPlace(place);
@@ -76,11 +78,8 @@ public class MyEvaluationFragment extends Fragment {
                         Log.e("MyEvaluationFragment","Can not load place data");
                     }
                 });
-
             }
         });
-
-
     }
 
     @Override

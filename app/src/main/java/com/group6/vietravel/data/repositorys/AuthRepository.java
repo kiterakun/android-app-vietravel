@@ -9,15 +9,12 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.group6.vietravel.models.User;
+import com.group6.vietravel.data.models.User;
 
 public class AuthRepository {
 
     private static final String TAG = "AuthRepository";
     private static AuthRepository instance;
-    private final Application application;
-
-    // Firebase
     private final FirebaseAuth mAuth;
     private final FirebaseFirestore db;
 
@@ -26,8 +23,7 @@ public class AuthRepository {
     private final MutableLiveData<String> errorLiveData;
     private final MutableLiveData<User> userProfileLiveData;
 
-    private AuthRepository(Application application) {
-        this.application = application;
+    private AuthRepository() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
         this.userLiveData = new MutableLiveData<>();
@@ -42,9 +38,9 @@ public class AuthRepository {
     }
 
     // Phương thức Singleton
-    public static synchronized AuthRepository getInstance(Application application) {
+    public static synchronized AuthRepository getInstance() {
         if (instance == null) {
-            instance = new AuthRepository(application);
+            instance = new AuthRepository();
         }
         return instance;
     }
@@ -63,7 +59,9 @@ public class AuthRepository {
                             String uid = firebaseUser.getUid();
                             // Dùng model User.java chúng ta đã tạo
                             User newUser = new User(uid, username, email);
-
+                            newUser.setAvatar_url("https://firebasestorage.googleapis.com" +
+                                    "/v0/b/backend-vie-travel.firebasestorage.app/o/place_image" +
+                                    "s%2Fth.jpg?alt=media&token=141f8044-00e0-4a71-abf8-66af673fb4f1");
                             // Ghi vào collection "users" với ID là UID
                             db.collection("users").document(uid)
                                     .set(newUser)

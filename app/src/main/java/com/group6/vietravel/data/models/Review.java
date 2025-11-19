@@ -14,10 +14,9 @@ public class Review {
     @PropertyName("place_id")
     private String place_id;
 
-    private double rating;
+    private float rating;
     private String status;
 
-    // Tương tự cho user_id
     @PropertyName("user_id")
     private String user_id;
 
@@ -26,7 +25,7 @@ public class Review {
 
     public Review(){}
 
-    public Review(String comment, String place_id, double rating, String status, String user_id){
+    public Review(String comment, String place_id, float rating, String status, String user_id){
         this.comment = comment;
         this.place_id = place_id;
         this.rating = rating;
@@ -68,10 +67,10 @@ public class Review {
         this.comment = comment;
     }
 
-    public double getRating() {
+    public float getRating() {
         return rating;
     }
-    public void setRating(double rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

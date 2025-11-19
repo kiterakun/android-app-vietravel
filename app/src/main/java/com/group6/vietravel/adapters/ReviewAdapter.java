@@ -5,8 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.vietravel.R;
 import com.group6.vietravel.data.models.Place;
@@ -15,93 +18,104 @@ import com.group6.vietravel.utils.PlaceUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
-public class ReviewAdapter extends BaseAdapter {
+public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder> {
 
     private Context context;
     private List<Review> reviewList;
-    private LayoutInflater inflater;
 
-    @Override
-    public int getCount() {
-        return reviewList.size();
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Review review);
     }
 
-    @Override
-    public Object getItem(int position) {
-        return reviewList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+    // 2. Hàm để Activity gọi vào
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 
     public ReviewAdapter(Context context, List<Review> reviewList) {
         this.context = context;
         this.reviewList = reviewList;
-        this.inflater = LayoutInflater.from(context);
     }
 
-    private static class ViewHolder {
-        TextView namePlaceTextView;
-        TextView rating;
-        TextView date;
-        TextView comment;
-
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.recycler_item_review, parent, false);
+        return new ViewHolder(view, mListener, reviewList);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ReviewAdapter.ViewHolder holder;
-        // 'convertView' là View cũ được tái sử dụng để tiết kiệm bộ nhớ
-        if (convertView == null) {
-            // Nếu không có View cũ, ta "inflate" (tạo) layout mới
-            convertView = inflater.inflate(R.layout.list_item_review, parent, false);
-
-            // Tạo ViewHolder để lưu các View con (chỉ làm 1 lần)
-            holder = new ReviewAdapter.ViewHolder();
-            holder.namePlaceTextView = convertView.findViewById(R.id.namePlaceTextView);
-            holder.rating = convertView.findViewById(R.id.rating);
-            holder.date = convertView.findViewById(R.id.date);
-            holder.comment = convertView.findViewById(R.id.comment);
-
-            // Gắn 'holder' vào 'convertView' để dùng lại lần sau
-            convertView.setTag(holder);
-        } else {
-            // Nếu có View cũ, ta lấy 'holder' đã lưu
-            holder = (ReviewAdapter.ViewHolder) convertView.getTag();
-        }
-
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Review review = reviewList.get(position);
-        PlaceUtils.getPlaceById(review.getPlaceId(),new PlaceUtils.OnPlaceLoadedCallback(){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String dateStr = (review.getCreated_at() != null) ? sdf.format(review.getCreated_at()) : "";
+
+        holder.comment.setText(review.getComment());
+        holder.date.setText(dateStr);
+
+        holder.namePlaceTextView.setText("Loading...");
+        holder.ratingAvg.setRating(0);
+
+        PlaceUtils.getPlaceById(review.getPlaceId(), new PlaceUtils.OnPlaceLoadedCallback() {
             @Override
             public void onPlaceLoaded(Place place) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String date = sdf.format(review.getCreated_at());
-
-                holder.comment.setText(review.getComment());
                 holder.namePlaceTextView.setText(place.getName());
-                holder.date.setText(date);
-                holder.rating.setText(String.valueOf(review.getRating()));
+                holder.ratingAvg.setRating(place.getRatingAvg());
             }
+
             @Override
             public void onError(Exception e) {
-                Log.e("ReviewAdapter","Can not load data");
+                Log.e("ReviewAdapter", "Can not load place data");
+                holder.namePlaceTextView.setText("Unknown Place");
             }
         });
+    }
 
-
-
-        return convertView;
+    @Override
+    public int getItemCount() {
+        if (reviewList == null) return 0;
+        return reviewList.size();
     }
 
     public void updateData(List<Review> newReviews) {
-        // Xóa sạch dữ liệu cũ
-        reviewList.clear();
+        if (reviewList != null) {
+            reviewList.clear();
+            reviewList.addAll(newReviews);
+            notifyDataSetChanged();
+        }
+    }
 
-        reviewList.addAll(newReviews);
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView namePlaceTextView;
+        RatingBar ratingAvg;
+        TextView date;
+        TextView comment;
 
-        notifyDataSetChanged();
+        public ViewHolder(@NonNull View itemView, final OnItemClickListener listener, final List<Review> dataList) {
+            super(itemView);
+            namePlaceTextView = itemView.findViewById(R.id.namePlaceTextView);
+            ratingAvg = itemView.findViewById(R.id.ratingAvg);
+            date = itemView.findViewById(R.id.date);
+            comment = itemView.findViewById(R.id.comment);
+
+            // Bắt sự kiện Click
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(dataList.get(position));
+                        }
+                    }
+                }
+            });
+        }
     }
 }

@@ -2,40 +2,58 @@ package com.group6.vietravel.ui.detail;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.group6.vietravel.R;
+import com.group6.vietravel.adapters.ReviewPlaceAdapter;
 import com.group6.vietravel.data.models.Place;
-import com.group6.vietravel.ui.detail.description.DescriptionFragment;
-import com.group6.vietravel.ui.detail.evaluate.EvaluateFragment;
-import com.group6.vietravel.ui.detail.overview.OverViewFragment;
+import com.group6.vietravel.data.models.Review;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
     private DetailViewModel detailViewModel;
     private ImageView imagePlace;
-    private TextView ratingAvg;
+    private RatingBar ratingAvg;
     private TextView namePlaceTextView;
-    private ImageView back;
-    private ImageView favorite;
-    private ImageView visited;
+    private Toolbar back;
+    private MaterialButton btn_favorite;
+    private MaterialButton btn_checkin;
+    private ReviewPlaceAdapter adapter;
+    private RecyclerView rv_reviews;
+    private TextView tv_description;
+    private TextView tv_address;
+    private TextView tv_opening_hours;
+    private TextView tv_phone;
+    private TextView tv_website_uri;
+    private TextInputEditText edt_comment;
+    private RatingBar rb_user_rating;
+    private TextView tv_price_range;
+    private TextView tv_rating_count;
+    private MaterialButton btn_submit_review;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +66,36 @@ public class DetailActivity extends AppCompatActivity {
             return insets;
         });
 
-        transactionFragment(savedInstanceState);
-
         detailViewModel = new ViewModelProvider(this).get(DetailViewModel.class);
 
         imagePlace = findViewById(R.id.imagePlace);
         namePlaceTextView = findViewById(R.id.namePlaceTextView);
         ratingAvg = findViewById(R.id.ratingAvg);
         back = findViewById(R.id.back);
-        favorite = findViewById(R.id.favorite);
-        visited = findViewById(R.id.visited);
+        btn_favorite = findViewById(R.id.btn_favorite);
+        btn_checkin = findViewById(R.id.btn_checkin);
+        rv_reviews = findViewById(R.id.rv_reviews);
+        tv_description = findViewById(R.id.tv_description);
+        tv_address = findViewById(R.id.tv_address);
+        tv_phone = findViewById(R.id.tv_phone);
+        tv_opening_hours = findViewById(R.id.tv_opening_hours);
+        tv_website_uri = findViewById(R.id.tv_website_uri);
+        edt_comment = findViewById(R.id.edt_comment);
+        rb_user_rating = findViewById(R.id.rb_user_rating);
+        tv_price_range = findViewById(R.id.tv_price_range);
+        tv_rating_count = findViewById(R.id.tv_rating_count);
+        btn_submit_review = findViewById(R.id.btn_submit_review);
 
         Intent intent = getIntent();
         Place place = intent.getParcelableExtra("PLACE_OBJECT");
-        loadContent(place);
+
+        detailViewModel.setPlace(place);
+        detailViewModel.getPlace().observe(this, new Observer<Place>() {
+            @Override
+            public void onChanged(Place place) {
+                loadContent(place);
+            }
+        });
 
         detailViewModel.getListFavoritePlace().observe(this, new Observer<List<Place>>() {
             @Override
@@ -77,6 +111,17 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        adapter = new ReviewPlaceAdapter(this,new ArrayList<>());
+        rv_reviews.setAdapter(adapter);
+        rv_reviews.setLayoutManager(new LinearLayoutManager(this));
+        detailViewModel.setListReviewPlace(place);
+        detailViewModel.getListReviewPlace().observe(this, new Observer<List<Review>>() {
+            @Override
+            public void onChanged(List<Review> reviews) {
+                adapter.updateData(reviews);
+            }
+        });
+
         back.setOnClickListener(v->{
             finish();
         });
@@ -84,20 +129,16 @@ public class DetailActivity extends AppCompatActivity {
 
     private void handelFavorite(Place place,List<Place> placeList){
         if(detailViewModel.containsPlace(place,placeList)){
-            favorite.setImageTintList(
-                    ColorStateList.valueOf(
-                            ContextCompat.getColor(this, R.color.pink)
-                    )
-            );
+            btn_favorite.setBackgroundColor(Color.parseColor("#FF00FF"));
 
-            favorite.setOnClickListener(v->{
+            btn_favorite.setOnClickListener(v->{
                 detailViewModel.removeFavorite(place);
             });
         }
         else{
-            favorite.setImageTintList(null);
+            btn_favorite.setBackgroundColor(Color.WHITE);
 
-            favorite.setOnClickListener(v->{
+            btn_favorite.setOnClickListener(v->{
                 detailViewModel.addFavorite(place);
             });
         }
@@ -105,27 +146,24 @@ public class DetailActivity extends AppCompatActivity {
 
     private void handelVisited(Place place,List<Place> placeList){
         if(detailViewModel.containsPlace(place,placeList)){
-            visited.setImageTintList(
-                    ColorStateList.valueOf(
-                            ContextCompat.getColor(this, R.color.blue)
-                    )
-            );
+            btn_checkin.setBackgroundColor(Color.parseColor("#2563EB"));
 
-            visited.setOnClickListener(v->{
+            btn_checkin.setOnClickListener(v->{
                 detailViewModel.removeVisited(place);
             });
         }
         else{
-            visited.setImageTintList(null);
+            btn_checkin.setBackgroundColor(Color.WHITE);
 
-            visited.setOnClickListener(v->{
+            btn_checkin.setOnClickListener(v->{
                 detailViewModel.addVisited(place);
             });
         }
     }
 
     private void loadContent(Place place){
-        String imageUrl = place.getCached_image_url();
+
+        String imageUrl = place.getThumbnailUrl();
         if (imageUrl != null && !imageUrl.isEmpty()) {
             Glide.with(DetailActivity.this)
                     .load(imageUrl) // Tải từ URL
@@ -133,37 +171,36 @@ public class DetailActivity extends AppCompatActivity {
         }
         namePlaceTextView.setText(place.getName());
 
-        ratingAvg.setText(String.format("%.1f", place.getRating_avg()));
-    }
+        ratingAvg.setRating(place.getRatingAvg());
+        tv_description.setText(place.getDescription());
+        tv_address.setText(place.getAddress());
+        tv_rating_count.setText("(" + place.getRatingCount() + ")");
+        tv_price_range.setText("$$ - " +place.getPriceRange());
 
-    private void loadChildFragment(Fragment childFragment){
-        FragmentTransaction transaction= getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.child_fragment_container, childFragment);
-
-        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-
-        transaction.commit();
-    }
-
-    private void transactionFragment(Bundle savedInstanceState){
-        if(savedInstanceState == null ){
-            getSupportFragmentManager().beginTransaction().
-                    replace(R.id.child_fragment_container,new OverViewFragment()).commit();
+        if(!place.getPhoneNumber().isEmpty()) {
+            tv_phone.setText(place.getPhoneNumber());
+        }
+        if(!place.getOpeningHours().isEmpty()) {
+            for(int i=0;i<place.getOpeningHours().size();i++){
+                tv_opening_hours.append("\n" + place.getOpeningHours().get(i));
+            }
+        }
+        if(!place.getWebsiteUri().isEmpty()){
+            tv_website_uri.setText(place.getWebsiteUri());
         }
 
-        TextView overview = findViewById(R.id.overview);
-        TextView description = findViewById(R.id.description);
-        TextView evaluate = findViewById(R.id.evaluate);
+        btn_submit_review.setOnClickListener(v -> {
+            String comment = edt_comment.getText().toString().trim();
+            float rating = rb_user_rating.getRating();
+            if(comment.isBlank() || rating==0){
+                Toast.makeText(this,"Comments and rating cannot be blank",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                detailViewModel.addReviewPlace(comment,place,rating);
+                edt_comment.setText("");
+                rb_user_rating.setRating(0);
+            }
+        });
 
-        overview.setOnClickListener(v -> {
-            loadChildFragment(new OverViewFragment());
-        });
-        description.setOnClickListener(v -> {
-            loadChildFragment(new DescriptionFragment());
-        });
-        evaluate.setOnClickListener(v -> {
-            loadChildFragment(new EvaluateFragment());
-        });
     }
 }
