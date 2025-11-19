@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.journey.historyJourney.HistoryJourneyFragment">
 
-    <ListView
-        android:id="@+id/list_view_place"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_place"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_rounded_corners_8dp"/>

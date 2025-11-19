@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.group6.vietravel.R;
-import com.group6.vietravel.models.User;
+import com.group6.vietravel.data.models.User;
 import com.group6.vietravel.ui.auth.AuthViewModel;
 import com.group6.vietravel.ui.main.journey.favoriteLocation.FavoriteLocationFragment;
 import com.group6.vietravel.ui.main.journey.historyJourney.HistoryJourneyFragment;

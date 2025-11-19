@@ -1,31 +1,82 @@
 package com.group6.vietravel.ui.detail;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.group6.vietravel.data.models.Place;
+import com.group6.vietravel.data.models.Review;
 import com.group6.vietravel.data.repositorys.PlaceRepository;
+import com.group6.vietravel.data.repositorys.ReviewRepository;
 
 import java.util.List;
 import java.util.Objects;
 
 public class DetailViewModel extends AndroidViewModel {
-    private PlaceRepository repository;
+    private final PlaceRepository placeRepository;
+    private  final ReviewRepository reviewRepository;
+
+    private final MutableLiveData<Place> placeMutableLiveData;
+
 
     public DetailViewModel(Application application) {
         super(application);
-        repository = PlaceRepository.getInstance(application.getApplicationContext());
+        placeRepository = PlaceRepository.getInstance(application.getApplicationContext());
+        reviewRepository = ReviewRepository.getInstance();
+        placeMutableLiveData =new MutableLiveData<>();
+    }
+
+    public LiveData<Place> getPlace(){
+        return placeMutableLiveData;
+    }
+
+    public void setPlace(Place place){
+        placeMutableLiveData.setValue(place);
     }
 
     public LiveData<List<Place>> getListFavoritePlace(){
-        return repository.getFavoritePlaces();
+        return placeRepository.getFavoritePlaces();
     }
 
     public LiveData<List<Place>> getListVisitedPlace(){
-        return repository.getVisitedPlaces();
+        return placeRepository.getVisitedPlaces();
+    }
+
+    public LiveData<List<Review>> getListReviewPlace(){
+        return reviewRepository.getAllReviewPlace();
+    }
+
+    public void setListReviewPlace(Place place){
+        reviewRepository.fetchAllReviewPlace(place.getPlaceId());
+    }
+
+    public void addReviewPlace(String comment, Place place,Float rating){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null){
+            Log.d("addReviewPlace","User null");
+            return;
+        }
+        if(place == null){
+            Log.e("addRatingPlace","Place null");
+            return;
+        }
+        Review review = new Review(comment, place.getPlaceId(), rating, "approved", user.getUid());
+        reviewRepository.saveNewReviewPlace(review);
+
+        int rating_count = place.getRatingCount();
+        float rating_avg = place.getRatingAvg();
+        float new_rating =  (rating_avg*rating_count + rating)/(rating_count+1);
+        int new_rating_count = rating_count+1;
+        place.setRatingAvg(new_rating);
+        place.setRatingCount(new_rating_count);
+
+        placeRepository.savePlace(place);
+        setPlace(place);
     }
 
     public boolean containsPlace(Place place,List<Place> placeList){
@@ -36,18 +87,18 @@ public class DetailViewModel extends AndroidViewModel {
     }
 
     public void addFavorite(Place place){
-        repository.addFavorite(place.getPlaceId());
+        placeRepository.addFavorite(place.getPlaceId());
     }
 
     public void removeFavorite(Place place){
-        repository.removeFavorite(place.getPlaceId());
+        placeRepository.removeFavorite(place.getPlaceId());
     }
 
     public void addVisited(Place place){
-        repository.addVisited(place.getPlaceId());
+        placeRepository.addVisited(place.getPlaceId());
     }
 
     public void removeVisited(Place place){
-        repository.removeVisited(place.getPlaceId());
+        placeRepository.removeVisited(place.getPlaceId());
     }
 }

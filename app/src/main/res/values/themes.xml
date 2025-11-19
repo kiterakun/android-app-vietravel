@@ -18,4 +18,9 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
+
+    <style name="RatingBarTheme">
+        <item name="colorControlActivated">#FFD700</item>  <!-- màu sao -->
+        <item name="colorControlNormal">@color/gray</item>     <!-- màu sao trống -->
+    </style>
 </resources>

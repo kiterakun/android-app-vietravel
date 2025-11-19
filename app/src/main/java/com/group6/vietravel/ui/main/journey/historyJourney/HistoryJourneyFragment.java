@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ public class HistoryJourneyFragment extends Fragment {
     private HistoryJourneyViewModel mViewModel;
 
     private MainViewModel mainViewModel;
-    private ListView list_view_place;
+    private RecyclerView recycler_view_place;
     private PlaceAdapter adapter;
 
     public static HistoryJourneyFragment newInstance() {
@@ -45,9 +47,10 @@ public class HistoryJourneyFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
 
-        list_view_place = view.findViewById(R.id.list_view_place);
+        recycler_view_place = view.findViewById(R.id.recycler_view_place);
         adapter = new PlaceAdapter(getContext(),new ArrayList<>());
-        list_view_place.setAdapter(adapter);
+        recycler_view_place.setAdapter(adapter);
+        recycler_view_place.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mViewModel = new ViewModelProvider(this).get(HistoryJourneyViewModel.class);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
@@ -59,11 +62,10 @@ public class HistoryJourneyFragment extends Fragment {
             }
         });
 
-        list_view_place.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter.setOnItemClickListener(new PlaceAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Place selectedPlace = (Place) parent.getItemAtPosition(position);
-                mainViewModel.selectPlace(selectedPlace);
+            public void onItemClick(Place place) {
+                mainViewModel.selectPlace(place);
             }
         });
 

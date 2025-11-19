@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,6 +14,14 @@
         android:elevation="2dp"
         android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/imagePlace"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="16dp"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="fitXY"
+            />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -31,41 +39,18 @@
                 android:layout_width="wrap_content"
                 android:text="Phở Thìn Bờ Hồ"
                 />
-            <LinearLayout
+
+            <RatingBar
+                android:id="@+id/ratingAvg"
+                style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:progressTint="@color/quantum_yellow"
                 android:layout_marginBottom="7dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="5dp"
-                    android:src="@drawable/ic_star"
-                    android:scaleType="fitXY"
-                    />
-                <TextView
-                    android:id="@+id/rating"
-                    android:textColor="#4B5563"
-                    android:textSize="12sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="4.9"
-                    />
-
-                <TextView
-                    android:id="@+id/date"
-                    android:textColor="#4B5563"
-                    android:layout_marginLeft="30dp"
-                    android:textSize="12sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="Date"
-                    />
-            </LinearLayout>
+                android:rating="4.5" />
 
             <TextView
-                android:id="@+id/comment"
+                android:id="@+id/descriptionTextView"
                 android:textColor="#6B7280"
                 android:textSize="12sp"
                 android:layout_marginBottom="6dp"
@@ -73,10 +58,11 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:text="Comment"
+                android:text="Phở bò truyền thống nổi tiếng nhất Hà Nội"
                 />
 
         </LinearLayout>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

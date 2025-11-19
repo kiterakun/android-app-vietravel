@@ -1,4 +1,4 @@
-package com.group6.vietravel.models;
+package com.group6.vietravel.data.models;
 
 import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
@@ -39,4 +39,8 @@ public class User {
     public long getPoints() { return points; }
     public String getStatus() { return status; }
     public Date getCreated_at() { return created_at; }
+
+    public void setAvatar_url(String avatar_url) {
+        this.avatar_url = avatar_url;
+    }
 }
