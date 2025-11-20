@@ -2,11 +2,9 @@ package com.group6.vietravel.utils;
 
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group6.vietravel.data.models.Place;
 
-import java.util.concurrent.atomic.AtomicReference;
 
 public class PlaceUtils {
 
