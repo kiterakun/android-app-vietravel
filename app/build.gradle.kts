@@ -60,6 +60,10 @@ dependencies {
 
     // Thư viện Google Maps
     implementation("com.google.android.gms:play-services-maps:19.2.0")
+    // Thu vien lay vi tri nguoi dung
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    // Thu vien HTTP de goi api tim duong di
+    implementation("com.squareup.okhttp3:okhttp:5.3.2")
 
     // Thư viện Places
     implementation("com.google.android.libraries.places:places:5.0.0")

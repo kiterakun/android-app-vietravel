@@ -23,7 +23,6 @@ public class DetailViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Place> placeMutableLiveData;
 
-
     public DetailViewModel(Application application) {
         super(application);
         placeRepository = PlaceRepository.getInstance(application.getApplicationContext());

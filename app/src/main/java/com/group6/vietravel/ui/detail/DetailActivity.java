@@ -29,6 +29,7 @@ import com.group6.vietravel.R;
 import com.group6.vietravel.adapters.ReviewPlaceAdapter;
 import com.group6.vietravel.data.models.Place;
 import com.group6.vietravel.data.models.Review;
+import com.group6.vietravel.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tv_price_range;
     private TextView tv_rating_count;
     private MaterialButton btn_submit_review;
+    private MaterialButton btn_map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,7 @@ public class DetailActivity extends AppCompatActivity {
         tv_price_range = findViewById(R.id.tv_price_range);
         tv_rating_count = findViewById(R.id.tv_rating_count);
         btn_submit_review = findViewById(R.id.btn_submit_review);
+        btn_map = findViewById(R.id.btn_map);
 
         Intent intent = getIntent();
         Place place = intent.getParcelableExtra("PLACE_OBJECT");
@@ -120,6 +123,15 @@ public class DetailActivity extends AppCompatActivity {
             public void onChanged(List<Review> reviews) {
                 adapter.updateData(reviews);
             }
+        });
+
+        btn_map.setOnClickListener(v->{
+            Intent new_intent = new Intent(DetailActivity.this, MainActivity.class);
+            new_intent.putExtra("TARGET_LOCATION_ID", place.getPlaceId());
+
+            new_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            startActivity(new_intent);
         });
 
         back.setOnClickListener(v->{
