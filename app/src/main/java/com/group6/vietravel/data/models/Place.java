@@ -21,6 +21,12 @@ public class Place implements Parcelable {
     private String name;
     private String description;
     private String address;
+
+    @PropertyName("province")
+    private String province;
+    @PropertyName("district")
+    private String district;
+
     private double latitude;
     private double longitude;
 
@@ -68,6 +74,8 @@ public class Place implements Parcelable {
         name = in.readString();
         description = in.readString();
         address = in.readString();
+        province = in.readString();
+        district = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
         priceRange = in.readString();
@@ -93,6 +101,8 @@ public class Place implements Parcelable {
         dest.writeString(name);
         dest.writeString(description);
         dest.writeString(address);
+        dest.writeString(province);
+        dest.writeString(district);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(priceRange);
@@ -105,7 +115,6 @@ public class Place implements Parcelable {
         dest.writeStringList(galleryUrls);
         dest.writeStringList(openingHours);
 
-        // Ghi Date dưới dạng long
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
         dest.writeLong(updatedAt != null ? updatedAt.getTime() : -1);
     }
@@ -197,6 +206,16 @@ public class Place implements Parcelable {
     public Date getUpdatedAt() { return updatedAt; }
     @PropertyName("updated_at")
     public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+
+    @PropertyName("province")
+    public String getProvince() { return province; }
+    @PropertyName("province")
+    public void setProvince(String province) { this.province = province; }
+
+    @PropertyName("district")
+    public String getDistrict() { return district; }
+    @PropertyName("district")
+    public void setDistrict(String district) { this.district = district; }
 
     public String getThumbnailUrl() {
         if (galleryUrls != null && !galleryUrls.isEmpty()) {
