@@ -64,9 +64,10 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.3.0")
     // Thu vien HTTP de goi api tim duong di
     implementation("com.squareup.okhttp3:okhttp:5.3.2")
-
     // Thư viện Places
     implementation("com.google.android.libraries.places:places:5.0.0")
     // Thư viện dung de load anh
     implementation("com.github.bumptech.glide:glide:5.0.5")
+    // Thu vien su ly json
+    implementation("com.google.code.gson:gson:2.10.1")
 }

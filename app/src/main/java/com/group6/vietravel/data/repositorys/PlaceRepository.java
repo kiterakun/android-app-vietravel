@@ -47,6 +47,8 @@ public class PlaceRepository {
     private final MutableLiveData<List<Place>> allPlacesLiveData;
     private final MutableLiveData<List<Place>> favoritePlacesLiveData;
     private final MutableLiveData<List<Place>> visitedPlacesLiveData;
+
+    private final MutableLiveData<List<Place>> searchPlacesLiveData;
     private final PlacesClient placesClient;
     private final FirebaseStorage storage;
 
@@ -60,6 +62,7 @@ public class PlaceRepository {
         allPlacesLiveData = new MutableLiveData<>();
         favoritePlacesLiveData = new MutableLiveData<>();
         visitedPlacesLiveData = new MutableLiveData<>();
+        searchPlacesLiveData = new MutableLiveData<>();
         storage = FirebaseStorage.getInstance();
 
         if (!Places.isInitialized()) {
@@ -89,6 +92,9 @@ public class PlaceRepository {
 
     public LiveData<List<Place>> getVisitedPlaces() {
         return visitedPlacesLiveData;
+    }
+    public LiveData<List<Place>> getSearchPlaces() {
+        return searchPlacesLiveData;
     }
 
     public void fetchAllPlaces() {
@@ -256,4 +262,46 @@ public class PlaceRepository {
             db.collection("places").add(place);
         }
     }
+
+    public void searchPlaces(String nameKeyword, String categoryId, String province, String district) {
+        com.google.firebase.firestore.Query query = db.collection("places")
+                .whereEqualTo("approved", true);
+
+        if (categoryId != null && !categoryId.isEmpty() && !"all".equals(categoryId)) {
+            query = query.whereEqualTo("category_id", categoryId);
+        }
+
+        if (province != null && !province.isEmpty() && !"all".equals(province)) {
+            query = query.whereEqualTo("province", province);
+        }
+
+        if (district != null && !district.isEmpty() && !"all".equals(district)) {
+            query = query.whereEqualTo("district", district);
+        }
+
+        if (nameKeyword != null && !nameKeyword.isEmpty()) {
+            String endKeyword = nameKeyword + "\uf8ff";
+
+            query = query.orderBy("name")
+                    .startAt(nameKeyword)
+                    .endAt(endKeyword);
+        } else {
+            query = query.orderBy("updated_at", com.google.firebase.firestore.Query.Direction.DESCENDING);
+        }
+
+        query.get().addOnSuccessListener(querySnapshot -> {
+            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                List<Place> places = querySnapshot.toObjects(Place.class);
+                Log.v(TAG, "Thành công ");
+                searchPlacesLiveData.postValue(places);
+            } else {
+                searchPlacesLiveData.postValue(new ArrayList<>());
+                Log.v(TAG, "Rỗng ");
+            }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Lỗi tìm kiếm: ", e);
+            searchPlacesLiveData.postValue(new ArrayList<>());
+        });
+    }
+
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -50,8 +51,10 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.group6.vietravel.R;
 import com.group6.vietravel.data.models.Place;
+import com.group6.vietravel.ui.detail.DetailActivity;
 import com.group6.vietravel.ui.main.MainActivity;
 import com.group6.vietravel.ui.main.MainViewModel;
+import com.group6.vietravel.ui.search.SearchActivity;
 
 
 import java.util.HashMap;
@@ -77,6 +80,7 @@ public class DiscoveryFragment extends Fragment implements OnMapReadyCallback {
     private MaterialButton btn_popup_detail;
     private MaterialButton btn_popup_direction;
     private LinearLayout goToPlace;
+    private CardView cv_search_bar;
 
     private Polyline currentPolyline;
     private FloatingActionButton fab_my_location;
@@ -112,6 +116,7 @@ public class DiscoveryFragment extends Fragment implements OnMapReadyCallback {
         btn_popup_direction = view.findViewById(R.id.btn_popup_direction);
         fab_my_location = view.findViewById(R.id.fab_my_location);
         goToPlace = view.findViewById(R.id.goToPlace);
+        cv_search_bar = view.findViewById(R.id.cv_search_bar);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map_fragment);
@@ -140,6 +145,11 @@ public class DiscoveryFragment extends Fragment implements OnMapReadyCallback {
         fab_my_location.setOnClickListener(v->{
             cv_place_info_popup.setVisibility(VISIBLE);
             fab_my_location.setVisibility(GONE);
+        });
+
+        cv_search_bar.setOnClickListener(v->{
+            Intent intent = new Intent(getContext(), SearchActivity.class);
+            startActivity(intent);
         });
     }
 
