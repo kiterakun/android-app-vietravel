@@ -145,11 +145,4 @@ public class JourneyFragment extends Fragment{
         transaction.commit();
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(JourneyViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }

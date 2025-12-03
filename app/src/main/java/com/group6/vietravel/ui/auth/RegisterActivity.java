@@ -41,6 +41,21 @@ public class RegisterActivity extends AppCompatActivity {
             return insets;
         });
 
+        View mainView = findViewById(R.id.main);
+
+        if (mainView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+                Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right,
+                        Math.max(systemBars.bottom, ime.bottom));
+
+                return WindowInsetsCompat.CONSUMED;
+            });
+        }
+
         editTextFullName = findViewById(R.id.editTextFullName);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -72,7 +87,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         toLogin.setOnClickListener(v -> {
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            // Xóa các Activity cũ khỏi stack
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();

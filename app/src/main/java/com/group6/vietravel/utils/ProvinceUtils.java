@@ -28,20 +28,22 @@ public class ProvinceUtils {
 
         for (Province p : cachedProvinces) {
             if (p.getName().equals(provinceName)) {
-
+                result.add(String.valueOf(p.getCode()));
                 if (p.getDistricts() != null) {
                     for (District d : p.getDistricts()) {
                         if (d.getName().equals(districtName)) {
-                            result.add(String.valueOf(p.getCode()));
                             result.add(String.valueOf(d.getCode()));
                             return result;
                         }
                     }
                 }
+                result.add("all");
+                break;
             }
         }
-        result.add("");
-        result.add("");
+
+        result.add("all");
+        result.add("all");
         return result;
     }
     public static Map<String, List<String>> getProvinceDistrictMap(Context context) {
