@@ -89,7 +89,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_description"
+                android:id="@+id/tv_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Quận Hoàn Kiếm, Hà Nội"

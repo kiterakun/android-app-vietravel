@@ -50,7 +50,6 @@
             android:layout_height="wrap_content"
             android:text="Di tích lịch sử"
             android:contentDescription="historical"
-            android:textColor="@color/black"
             app:chipStrokeColor="@color/blue"
             app:chipStrokeWidth="1dp"/>
 
@@ -113,18 +112,24 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
         android:hint="Chọn Tỉnh/Thành phố"
         app:boxStrokeColor="@color/blue"
         app:hintTextColor="@color/blue"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="12dp"
+        app:endIconMode="dropdown_menu"
+        app:endIconTint="@color/blue">
 
         <AutoCompleteTextView
             android:id="@+id/actv_province"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
-            android:padding="12dp"
-            android:background="@color/white"/>
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:background="@drawable/shape_rounded_corners_8dp"
+            android:padding="12dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -132,18 +137,24 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
         android:hint="Chọn Quận/Huyện"
         android:enabled="false"
         app:boxStrokeColor="@color/blue"
         app:hintTextColor="@color/blue"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="24dp"
+        app:endIconMode="dropdown_menu"
+        app:endIconTint="@color/blue">
         <AutoCompleteTextView
             android:id="@+id/actv_district"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
-            android:padding="12dp"
-            android:background="@color/white"/>
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:background="@drawable/shape_rounded_corners_8dp"
+            android:padding="12dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -153,6 +164,7 @@
         android:text="Áp dụng bộ lọc"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:backgroundTint="@color/blue"
         app:cornerRadius="8dp"/>
 

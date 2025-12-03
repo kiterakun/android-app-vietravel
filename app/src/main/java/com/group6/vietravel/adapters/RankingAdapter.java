@@ -97,7 +97,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         }
 
         holder.tv_rank_name.setText(place.getName());
-        holder.tv_description.setText(place.getDescription());
+        holder.tv_address.setText(place.getAddress());
         holder.tv_rank_score.setText(String.valueOf(place.getRatingAvg()));
         holder.tv_rating_count.setText(String.valueOf(place.getRatingCount()));
 
@@ -116,7 +116,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
             TextView tv_rank_name;
             TextView tv_rank_score;
             TextView tv_rating_count;
-            TextView tv_description;
+            TextView tv_address;
             
 
             public ViewHolder(@NonNull View itemView, final RankingAdapter.OnItemClickListener listener, final List<Place> data) {
@@ -126,7 +126,7 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
                 tv_rank_name = itemView.findViewById(R.id.tv_rank_name);
                 tv_rank_score = itemView.findViewById(R.id.tv_rank_score);
                 tv_rating_count = itemView.findViewById(R.id.tv_rating_count);
-                tv_description = itemView.findViewById(R.id.tv_description);
+                tv_address = itemView.findViewById(R.id.tv_address);
                 card_ranking_item = itemView.findViewById(R.id.card_ranking_item);
 
 

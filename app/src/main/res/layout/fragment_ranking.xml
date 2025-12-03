@@ -42,7 +42,11 @@
                 android:layout_weight="1"
                 android:hint="Tỉnh/Thành"
                 app:boxStrokeColor="@color/blue"
-                app:hintTextColor="@color/blue">
+                app:hintTextColor="@color/blue"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/blue">
                 <AutoCompleteTextView
                     android:id="@+id/filter_province"
                     android:layout_width="match_parent"
@@ -50,7 +54,9 @@
                     android:inputType="none"
                     android:textSize="14sp"
                     android:padding="12dp"
-                    android:background="@color/white"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:background="@drawable/shape_rounded_corners_8dp"
                     android:saveEnabled="false"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,7 +70,11 @@
                 android:layout_weight="1"
                 android:hint="Quận/Huyện"
                 app:boxStrokeColor="@color/blue"
-                app:hintTextColor="@color/blue">
+                app:hintTextColor="@color/blue"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/blue">
                 <AutoCompleteTextView
                     android:id="@+id/filter_district"
                     android:layout_width="match_parent"
@@ -72,7 +82,9 @@
                     android:inputType="none"
                     android:textSize="14sp"
                     android:padding="12dp"
-                    android:background="@color/white"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:background="@drawable/shape_rounded_corners_8dp"
                     android:saveEnabled="false"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -84,17 +96,22 @@
             android:layout_marginTop="8dp"
             android:hint="Danh mục địa điểm"
             app:boxStrokeColor="@color/blue"
-            app:hintTextColor="@color/blue">
+            app:hintTextColor="@color/blue"
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="@color/blue">
             <AutoCompleteTextView
                 android:id="@+id/filter_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                android:text="Tất cả"
                 android:textSize="14sp"
                 android:padding="12dp"
-                android:background="@color/white"
-                android:saveEnabled="false"/>
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
+                android:background="@drawable/shape_rounded_corners_8dp"
+                android:saveEnabled="false" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
