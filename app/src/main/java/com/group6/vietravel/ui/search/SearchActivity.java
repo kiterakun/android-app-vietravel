@@ -79,10 +79,10 @@ public class SearchActivity extends AppCompatActivity {
             filterPopup.setOnFilterAppliedListener(new FilterBottomSheetFragment.OnFilterAppliedListener() {
                 @Override
                 public void onFilterApplied(String cate, String prov, String dist) {
-                    Log.d("FilterResult", "Category: " + category + ", Place: " + province + " - " + district);
                     category = cate;
                     province = prov;
                     district = dist;
+                    searchViewModel.setListSearch(name,category,province,district);
                 }
             });
             filterPopup.show(getSupportFragmentManager(), "FilterBottomSheet");

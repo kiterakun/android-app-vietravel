@@ -304,4 +304,68 @@ public class PlaceRepository {
         });
     }
 
+    public LiveData<List<Place>> fetchRankedPlaces(String province, String district, String categoryId, int limit) {
+        MutableLiveData<List<Place>> resultLiveData = new MutableLiveData<>();
+
+        com.google.firebase.firestore.Query query = db.collection("places")
+                .whereEqualTo("approved", true);
+
+        if (province != null && !province.isEmpty() && !"all".equals(province)) {
+            query = query.whereEqualTo("province", province);
+        }
+
+        query = query.orderBy("rating_avg", com.google.firebase.firestore.Query.Direction.DESCENDING);
+
+        long fetchLimit = limit;
+        if ((district != null && !"all".equals(district)) || (categoryId != null && !"all".equals(categoryId))) {
+            fetchLimit = 50;
+        }
+
+        query.limit(fetchLimit);
+
+        query.get().addOnSuccessListener(snapshot -> {
+            if (snapshot == null || snapshot.isEmpty()) {
+                resultLiveData.postValue(new ArrayList<>());
+                return;
+            }
+
+            List<Place> rawList = snapshot.toObjects(Place.class);
+            List<Place> filteredList = new ArrayList<>();
+
+            for (Place p : rawList) {
+                boolean matchDistrict = true;
+                boolean matchCategory = true;
+
+                if (district != null && !district.isEmpty() && !"all".equals(district)) {
+                    if (p.getDistrict() == null || !p.getDistrict().equals(district)) {
+                        matchDistrict = false;
+                    }
+                }
+
+                if (categoryId != null && !categoryId.isEmpty() && !"all".equals(categoryId)) {
+                    if (p.getCategoryId() == null || !p.getCategoryId().equals(categoryId)) {
+                        matchCategory = false;
+                    }
+                }
+
+                if (matchDistrict && matchCategory) {
+                    filteredList.add(p);
+                }
+
+                if (filteredList.size() >= limit) {
+                    break;
+                }
+            }
+            resultLiveData.postValue(filteredList);
+
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Lỗi fetch ranking: ", e);
+            resultLiveData.postValue(new ArrayList<>());
+        });
+
+        return resultLiveData;
+    }
+
+
+
 }
