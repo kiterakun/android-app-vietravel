@@ -1,4 +1,5 @@
 package com.group6.vietravel.features.ui.auth;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.auth.FirebaseAuth; // Cần import để signout nếu bị khóa
 import com.group6.vietravel.R;
 import com.group6.vietravel.admin.ui.main.AdminMainActivity;
 import com.group6.vietravel.features.user.ui.main.MainActivity;
@@ -25,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonLogin;
-
     private TextView toRegister;
 
     @Override
@@ -39,20 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        View mainView = findViewById(R.id.main);
-        if (mainView != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-
-                Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
-
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right,
-                        Math.max(systemBars.bottom, ime.bottom));
-
-                return WindowInsetsCompat.CONSUMED;
-            });
-        }
-
+        // ... (Giữ nguyên phần ánh xạ View và setOnClickListener) ...
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
@@ -70,13 +58,11 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             authViewModel.login(email, password);
         });
 
         toRegister.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
@@ -84,35 +70,39 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void observeViewModel() {
-
-        // 1. Lắng nghe lỗi (Giữ nguyên)
+        // 1. Lắng nghe lỗi
         authViewModel.getErrorLiveData().observe(this, error -> {
             if (error != null && !error.isEmpty()) {
                 Toast.makeText(this, "Lỗi: " + error, Toast.LENGTH_LONG).show();
             }
         });
 
-        // 2. Lắng nghe Auth thành công -> Gọi check role (ĐÃ SỬA)
+        // 2. Lắng nghe Auth thành công
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                // Chưa chuyển màn hình vội, đi kiểm tra quyền trước
-                Toast.makeText(this, "Đang kiểm tra quyền truy cập...", Toast.LENGTH_SHORT).show();
+                // Đăng nhập Firebase thành công -> Gọi check role và status
+                Toast.makeText(this, "Đang kiểm tra trạng thái tài khoản...", Toast.LENGTH_SHORT).show();
                 authViewModel.checkUserRole(firebaseUser.getUid());
             }
         });
 
-        // 3. Lắng nghe Role để chuyển hướng (THÊM MỚI)
+        // 3. XỬ LÝ PHÂN QUYỀN VÀ KHÓA TÀI KHOẢN (QUAN TRỌNG)
         authViewModel.getRoleLiveData().observe(this, role -> {
             if (role != null) {
-                Intent intent;
+                // Kiểm tra nếu bị khóa
+                if ("LOCKED".equals(role)) {
+                    Toast.makeText(this, "Tài khoản của bạn đã bị khóa! Vui lòng liên hệ Admin.", Toast.LENGTH_LONG).show();
 
-                // Logic phân quyền
+                    // Đăng xuất ngay lập tức để người dùng không kẹt ở trạng thái "đã login"
+                    FirebaseAuth.getInstance().signOut();
+                    return; // Dừng lại, không chuyển màn hình
+                }
+
+                Intent intent;
                 if ("admin".equals(role)) {
-                    // Chuyển sang màn hình Admin (Bạn cần tạo Activity này)
                     intent = new Intent(LoginActivity.this, AdminMainActivity.class);
                     Toast.makeText(this, "Xin chào Admin!", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Chuyển sang màn hình User (MainActivity)
                     intent = new Intent(LoginActivity.this, MainActivity.class);
                     Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                 }

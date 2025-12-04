@@ -17,11 +17,15 @@ public class AuthViewModel extends AndroidViewModel {
 
     private final AuthRepository authRepository;
     private final LiveData<FirebaseUser> userLiveData;
-    private final LiveData<String> errorLiveData;
+    private MutableLiveData<String> roleLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+
+    // Nếu bạn muốn giữ tính đóng gói (Encapsulation), hãy thêm Getter trả về LiveData:
+
     private final LiveData<User> userProfileLiveData;
 
     // 1. Thêm LiveData để chứa kết quả Role
-    private final MutableLiveData<String> roleLiveData = new MutableLiveData<>();
+
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
@@ -45,26 +49,28 @@ public class AuthViewModel extends AndroidViewModel {
     public void checkUserRole(String uid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Giả sử collection tên là "users" và document ID chính là UID
         db.collection("users").document(uid).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // Lấy trường "role" (ví dụ: "admin" hoặc "user")
-                        String role = documentSnapshot.getString("role");
-                        if (role != null) {
-                            roleLiveData.postValue(role);
+                        // 1. Lấy trạng thái (status)
+                        String status = documentSnapshot.getString("status");
+
+                        // 2. Kiểm tra status trước
+                        if ("locked".equalsIgnoreCase(status)) {
+                            // Nếu bị khóa, báo về LiveData giá trị đặc biệt
+                            roleLiveData.postValue("LOCKED");
                         } else {
-                            // Nếu không có field role, mặc định là user
-                            roleLiveData.postValue("user");
+                            // 3. Nếu không khóa, mới lấy role và trả về bình thường
+                            String role = documentSnapshot.getString("role");
+                            roleLiveData.postValue(role != null ? role : "user");
                         }
                     } else {
-                        // Nếu user mới đăng ký chưa có data trong Firestore -> coi là user thường
+                        // Không tìm thấy user trong DB -> Coi như user thường
                         roleLiveData.postValue("user");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Nếu lỗi mạng hoặc lỗi khác -> báo lỗi hoặc mặc định user
-                    roleLiveData.postValue("user");
+                    errorLiveData.postValue("Lỗi kiểm tra quyền: " + e.getMessage());
                 });
     }
 
