@@ -141,6 +141,31 @@ public class PlaceRepository {
                 });
     }
 
+    public interface OnPlaceLoadedCallback {
+        void onPlaceLoaded(Place place);
+    }
+
+    // 2. Hàm lấy Place theo ID từ Firestore
+    public void getPlaceById(String placeId, OnPlaceLoadedCallback callback) {
+        // Lưu ý: Kiểm tra xem trên Firebase bạn đặt tên collection là "places" hay "Places"
+        FirebaseFirestore.getInstance().collection("places")
+                .document(placeId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Place place = documentSnapshot.toObject(Place.class);
+                        callback.onPlaceLoaded(place);
+                    } else {
+                        // Không tìm thấy địa điểm
+                        callback.onPlaceLoaded(null);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Lỗi kết nối hoặc lỗi khác
+                    callback.onPlaceLoaded(null);
+                });
+    }
+
     public void fetchVisitedPlaces() {
         FirebaseUser user = auth.getCurrentUser();
         if (user == null) {

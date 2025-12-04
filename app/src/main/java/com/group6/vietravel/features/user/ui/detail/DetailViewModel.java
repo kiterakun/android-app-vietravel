@@ -64,18 +64,18 @@ public class DetailViewModel extends AndroidViewModel {
             Log.e("addRatingPlace","Place null");
             return;
         }
-        Review review = new Review(comment, place.getPlaceId(), rating, "approved", user.getUid());
+        Review review = new Review(comment, place.getPlaceId(), rating, "pending", user.getUid());
         reviewRepository.saveNewReviewPlace(review);
 
-        int rating_count = place.getRatingCount();
-        float rating_avg = place.getRatingAvg();
-        float new_rating =  (rating_avg*rating_count + rating)/(rating_count+1);
-        int new_rating_count = rating_count+1;
-        place.setRatingAvg(new_rating);
-        place.setRatingCount(new_rating_count);
-
-        placeRepository.savePlace(place);
-        setPlace(place);
+//        int rating_count = place.getRatingCount();
+//        float rating_avg = place.getRatingAvg();
+//        float new_rating =  (rating_avg*rating_count + rating)/(rating_count+1);
+//        int new_rating_count = rating_count+1;
+//        place.setRatingAvg(new_rating);
+//        place.setRatingCount(new_rating_count);
+//
+//        placeRepository.savePlace(place);
+//        setPlace(place);
     }
 
     public boolean containsPlace(Place place,List<Place> placeList){

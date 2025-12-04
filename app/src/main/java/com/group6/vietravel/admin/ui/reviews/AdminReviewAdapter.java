@@ -37,6 +37,7 @@ public class AdminReviewAdapter extends RecyclerView.Adapter<AdminReviewAdapter.
 
     public interface OnReviewActionListener {
         void onApprove(Review review);
+//        void onEdit(Review review);
         void onReject(Review review);
         void onSelectionChanged(int selectedCount);
     }

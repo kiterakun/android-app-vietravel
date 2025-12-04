@@ -60,7 +60,7 @@ public class ReviewModerationFragment extends Fragment implements AdminReviewAda
 
         // Load initial data
         viewModel.loadAllReviews();
-        viewModel.loadAllUsers();
+        // viewModel.loadAllUsers(); // <-- ĐÃ XÓA DÒNG NÀY
         viewModel.loadAllPlaces();
     }
 
@@ -134,9 +134,11 @@ public class ReviewModerationFragment extends Fragment implements AdminReviewAda
             filterReviews();
         });
 
-        viewModel.getAllUsers().observe(getViewLifecycleOwner(), users -> {
+        // ĐÃ XÓA OBSERVER CHO USERS
+        /* viewModel.getAllUsers().observe(getViewLifecycleOwner(), users -> {
             adapter.setUsers(users);
         });
+        */
 
         viewModel.getAllPlaces().observe(getViewLifecycleOwner(), places -> {
             adapter.setPlaces(places);
@@ -145,7 +147,6 @@ public class ReviewModerationFragment extends Fragment implements AdminReviewAda
         viewModel.getOperationSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success) {
                 Toast.makeText(getContext(), "Thao tác thành công", Toast.LENGTH_SHORT).show();
-                // Refresh data if needed, but Firestore listener should auto-update
             }
         });
 
@@ -185,21 +186,6 @@ public class ReviewModerationFragment extends Fragment implements AdminReviewAda
     }
 
     @Override
-    public void onApprove(Review review) {
-        showConfirmDialog("Duyệt đánh giá này?", () -> viewModel.approveReview(review.getReviewId()));
-    }
-
-    @Override
-    public void onReject(Review review) {
-        showConfirmDialog("Từ chối đánh giá này?", () -> viewModel.rejectReview(review.getReviewId()));
-    }
-
-//    @Override
-//    public void onDelete(Review review) {
-//        showConfirmDialog("Xóa đánh giá này?", () -> viewModel.deleteReview(review.getReviewId()));
-//    }
-
-    @Override
     public void onSelectionChanged(int selectedCount) {
         if (selectedCount > 0) {
             layoutBottomBar.setVisibility(View.VISIBLE);
@@ -207,4 +193,36 @@ public class ReviewModerationFragment extends Fragment implements AdminReviewAda
             layoutBottomBar.setVisibility(View.GONE);
         }
     }
+
+    // --- CÁC HÀM XỬ LÝ HÀNH ĐỘNG ---
+
+    @Override
+    public void onApprove(Review review) {
+        // Kiểm tra nếu đã duyệt rồi thì không làm gì cả
+        if ("approved".equals(review.getStatus())) {
+            Toast.makeText(getContext(), "Đánh giá này đã được duyệt rồi", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showConfirmDialog("Duyệt đánh giá này và cập nhật điểm địa điểm?", () -> {
+            // Truyền nguyên object Review sang ViewModel để tính toán
+            viewModel.approveReview(review);
+        });
+    }
+
+    @Override
+    public void onReject(Review review) {
+        showConfirmDialog("Từ chối đánh giá này?", () -> {
+            viewModel.rejectReview(review.getReviewId());
+        });
+    }
+
+//    @Override
+//    public void onEdit(Review review) {
+//        // Nếu bạn muốn giữ tính năng sửa, có thể bỏ comment dòng dưới (nếu đã tạo Dialog)
+//        // showEditDialog(review);
+//
+//        // Nếu không cần sửa nữa thì để trống hoặc thông báo
+//        Toast.makeText(getContext(), "Tính năng chỉnh sửa đang tạm khóa", Toast.LENGTH_SHORT).show();
+//    }
 }
