@@ -11,8 +11,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.group6.vietravel.data.models.place.Place;
 import com.group6.vietravel.data.models.review.Review;
-import com.group6.vietravel.data.repositorys.PlaceRepository;
-import com.group6.vietravel.data.repositorys.ReviewRepository;
+import com.group6.vietravel.data.repositories.place.PlaceRepository;
+import com.group6.vietravel.data.repositories.review.ReviewRepository;
 
 import java.util.List;
 import java.util.Objects;

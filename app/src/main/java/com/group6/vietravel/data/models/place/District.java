@@ -1,4 +1,4 @@
-package com.group6.vietravel.data.models;
+package com.group6.vietravel.data.models.place;
 
 import com.google.gson.annotations.SerializedName;
 

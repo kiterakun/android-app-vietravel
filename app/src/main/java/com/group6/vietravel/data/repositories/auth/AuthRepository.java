@@ -1,4 +1,4 @@
-package com.group6.vietravel.data.repositorys;
+package com.group6.vietravel.data.repositories.auth;
 
 import android.app.Application;
 import android.util.Log;

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.group6.vietravel.data.models.place.Place;
 import com.group6.vietravel.data.models.review.Review;
-import com.group6.vietravel.data.repositorys.ReviewRepository;
+import com.group6.vietravel.data.repositories.review.ReviewRepository;
 
 import java.util.List;
 

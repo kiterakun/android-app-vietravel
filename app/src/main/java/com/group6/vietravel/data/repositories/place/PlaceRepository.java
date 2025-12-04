@@ -1,4 +1,4 @@
-package com.group6.vietravel.data.repositorys;
+package com.group6.vietravel.data.repositories.place;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;

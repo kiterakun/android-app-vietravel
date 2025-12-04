@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.group6.vietravel.data.models.place.Place;
-import com.group6.vietravel.data.repositorys.PlaceRepository;
+import com.group6.vietravel.data.repositories.place.PlaceRepository;
 
 import java.util.List;
 

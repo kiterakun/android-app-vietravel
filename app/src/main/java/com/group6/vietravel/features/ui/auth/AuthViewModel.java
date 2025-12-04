@@ -1,4 +1,4 @@
-package com.group6.vietravel.ui.auth;
+package com.group6.vietravel.features.ui.auth;
 
 import android.app.Application;
 
@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot; // Thêm import này
 import com.google.firebase.firestore.FirebaseFirestore; // Thêm import này
 import com.group6.vietravel.data.models.user.User;
-import com.group6.vietravel.data.repositorys.AuthRepository;
+import com.group6.vietravel.data.repositories.auth.AuthRepository;
 
 public class AuthViewModel extends AndroidViewModel {
 

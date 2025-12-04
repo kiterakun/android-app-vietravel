@@ -1,4 +1,4 @@
-package com.group6.vietravel.ui.auth;
+package com.group6.vietravel.features.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;

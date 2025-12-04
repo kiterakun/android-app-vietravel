@@ -24,7 +24,7 @@ import android.widget.ListView;
 import com.group6.vietravel.R;
 import com.group6.vietravel.features.user.ui.adapters.PlaceAdapter;
 import com.group6.vietravel.data.models.place.Place;
-import com.group6.vietravel.data.repositorys.PlaceRepository;
+import com.group6.vietravel.data.repositories.place.PlaceRepository;
 import com.group6.vietravel.features.user.ui.main.MainViewModel;
 
 import java.util.ArrayList;

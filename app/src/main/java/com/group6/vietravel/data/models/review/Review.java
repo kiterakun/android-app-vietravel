@@ -1,4 +1,4 @@
-package com.group6.vietravel.data.models;
+package com.group6.vietravel.data.models.review;
 
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.PropertyName;

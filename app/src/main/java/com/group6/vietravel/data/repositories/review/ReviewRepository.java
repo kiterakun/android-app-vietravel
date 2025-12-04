@@ -1,4 +1,4 @@
-package com.group6.vietravel.data.repositorys;
+package com.group6.vietravel.data.repositories.review;
 
 import android.content.Context;
 import android.util.Log;

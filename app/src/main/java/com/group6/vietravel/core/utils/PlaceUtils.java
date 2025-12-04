@@ -1,4 +1,4 @@
-package com.group6.vietravel.utils;
+package com.group6.vietravel.core.utils;
 
 import android.util.Log;
 
