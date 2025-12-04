@@ -7,17 +7,25 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.group6.vietravel.admin.data.repositories.AdminReviewRepository;
+import com.group6.vietravel.admin.data.repositories.AdminUserRepository;
+import com.group6.vietravel.admin.data.repositories.AdminPlaceRepository;
+import com.group6.vietravel.data.models.place.Place;
 import com.group6.vietravel.data.models.review.Review;
+import com.group6.vietravel.data.models.user.User;
 
 import java.util.List;
 
 public class ReviewModerationViewModel extends AndroidViewModel {
     
     private final AdminReviewRepository repository;
+    private final AdminUserRepository userRepository;
+    private final AdminPlaceRepository placeRepository;
     
     public ReviewModerationViewModel(@NonNull Application application) {
         super(application);
         repository = AdminReviewRepository.getInstance();
+        userRepository = AdminUserRepository.getInstance();
+        placeRepository = AdminPlaceRepository.getInstance();
     }
     
     public LiveData<List<Review>> getAllReviews() {
@@ -42,6 +50,22 @@ public class ReviewModerationViewModel extends AndroidViewModel {
     
     public void loadPendingReviews() {
         repository.fetchPendingReviews();
+    }
+
+    public LiveData<List<User>> getAllUsers() {
+        return userRepository.getAllUsers();
+    }
+
+    public void loadAllUsers() {
+        userRepository.fetchAllUsers();
+    }
+
+    public LiveData<List<Place>> getAllPlaces() {
+        return placeRepository.getAllPlaces();
+    }
+
+    public void loadAllPlaces() {
+        placeRepository.fetchAllPlaces();
     }
     
     public void approveReview(String reviewId) {

@@ -7,32 +7,32 @@
 
     <fragment
         android:id="@+id/navigation_discovery"
-        android:name="com.group6.vietravel.ui.main.discovery.DiscoveryFragment"
+        android:name="com.group6.vietravel.features.user.ui.main.discovery.DiscoveryFragment"
         android:label="Discovery"
         tools:layout="@layout/fragment_discovery"
         />
 
     <fragment
         android:id="@+id/navigation_ranking"
-        android:name="com.group6.vietravel.ui.main.ranking.RankingFragment"
+        android:name="com.group6.vietravel.features.user.ui.main.ranking.RankingFragment"
         android:label="Ranking"
         tools:layout="@layout/fragment_ranking" />
 
     <fragment
         android:id="@+id/navigation_journey"
-        android:name="com.group6.vietravel.ui.main.journey.JourneyFragment"
+        android:name="com.group6.vietravel.features.user.ui.main.journey.JourneyFragment"
         android:label="Journey"
         tools:layout="@layout/fragment_journey" />
 
     <fragment
         android:id="@+id/navigation_account"
-        android:name="com.group6.vietravel.ui.main.account.AccountFragment"
+        android:name="com.group6.vietravel.features.user.ui.main.account.AccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_account" />
 
     <fragment
         android:id="@+id/navigation_chatbot"
-        android:name="com.group6.vietravel.ui.main.chatbot.ChatbotFragment"
+        android:name="com.group6.vietravel.features.user.ui.main.chatbot.ChatbotFragment"
         android:label="Chatbot"
         tools:layout="@layout/fragment_chatbot" />
 

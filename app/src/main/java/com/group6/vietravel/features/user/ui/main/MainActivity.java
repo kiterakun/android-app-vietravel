@@ -69,7 +69,15 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_discovery, R.id.navigation_ranking, R.id.navigation_journey, R.id.navigation_account, R.id.navigation_chatbot)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        // CODE ĐÃ SỬA
+// 1. Lấy NavHostFragment từ FragmentManager
+        androidx.navigation.fragment.NavHostFragment navHostFragment =
+                (androidx.navigation.fragment.NavHostFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment_activity_main);
+
+// 2. Lấy NavController từ navHostFragment
+        NavController navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);

@@ -1,73 +1,210 @@
 package com.group6.vietravel.admin.ui.reviews;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.ChipGroup;
 import com.group6.vietravel.R;
+import com.group6.vietravel.data.models.review.Review;
 
-/**
- * NGƯỜI 2: KIỂM DUYỆT REVIEW (ADF02)
- * 
- * TODO List:
- * 1. Tạo ReviewModerationViewModel
- * 2. Tạo layout fragment_review_moderation.xml với:
- *    - Filter chips (All, Pending, Approved, Rejected)
- *    - Checkbox để select all (cho bulk actions)
- *    - RecyclerView
- *    - Bottom bar với Approve/Reject buttons (hiện khi có items selected)
- * 3. Tạo AdminReviewAdapter với:
- *    - Checkbox để chọn multiple items
- *    - Display: user avatar, username, rating, comment, place name
- *    - Status badge (pending/approved/rejected)
- *    - Action buttons (Approve/Reject/Delete)
- * 4. Tạo layout item_admin_review.xml
- * 
- * Chức năng cần implement:
- * - Hiển thị danh sách reviews
- * - Filter theo status (All/Pending/Approved/Rejected)
- * - Single approve/reject/delete
- * - Bulk approve/reject (chọn nhiều)
- * - Click item để xem chi tiết (user + place info)
- * - Hiển thị dialog confirm trước khi approve/reject
- * 
- * Code tham khảo:
- * - app/src/main/java/com/group6/vietravel/adapters/ReviewAdapter.java
- * - app/src/main/java/com/group6/vietravel/adapters/ReviewPlaceAdapter.java
- */
-public class ReviewModerationFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ReviewModerationFragment extends Fragment implements AdminReviewAdapter.OnReviewActionListener {
 
     private ReviewModerationViewModel viewModel;
+    private AdminReviewAdapter adapter;
+    private List<Review> allReviews = new ArrayList<>();
+    private String currentFilter = "all"; // all, pending, approved, rejected
+
+    private RecyclerView rvReviews;
+    private ChipGroup chipGroupFilter;
+    private CheckBox cbSelectAll;
+    private View layoutBottomBar;
+    private Button btnBulkApprove;
+    private Button btnBulkReject;
+    private TextView tvEmpty;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_placeholder, container, false);
-        
-        TextView textView = view.findViewById(R.id.text_placeholder);
-        textView.setText("Review Moderation Fragment\n\nNGƯỜI 2: Implement kiểm duyệt review ở đây");
-        
-        return view;
+        return inflater.inflate(R.layout.fragment_review_moderation, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         viewModel = new ViewModelProvider(this).get(ReviewModerationViewModel.class);
-        
-        // TODO: Initialize views
-        // TODO: Setup RecyclerView with adapter
-        // TODO: Setup filter chips
-        // TODO: Setup bulk action buttons
-        // TODO: Observe ViewModel LiveData
+
+        initViews(view);
+        setupRecyclerView();
+        setupListeners();
+        setupObservers();
+
+        // Load initial data
+        viewModel.loadAllReviews();
+        viewModel.loadAllUsers();
+        viewModel.loadAllPlaces();
+    }
+
+    private void initViews(View view) {
+        rvReviews = view.findViewById(R.id.rvReviews);
+        chipGroupFilter = view.findViewById(R.id.chipGroupFilter);
+        cbSelectAll = view.findViewById(R.id.cbSelectAll);
+        layoutBottomBar = view.findViewById(R.id.layoutBottomBar);
+        btnBulkApprove = view.findViewById(R.id.btnBulkApprove);
+        btnBulkReject = view.findViewById(R.id.btnBulkReject);
+        tvEmpty = view.findViewById(R.id.tvEmpty);
+    }
+
+    private void setupRecyclerView() {
+        adapter = new AdminReviewAdapter(this);
+        rvReviews.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvReviews.setAdapter(adapter);
+    }
+
+    private void setupListeners() {
+        // Filter Chips
+        chipGroupFilter.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.chipPending) {
+                currentFilter = "pending";
+            } else if (checkedId == R.id.chipApproved) {
+                currentFilter = "approved";
+            } else if (checkedId == R.id.chipRejected) {
+                currentFilter = "rejected";
+            } else {
+                currentFilter = "all";
+            }
+            filterReviews();
+        });
+
+        // Select All
+        cbSelectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                adapter.selectAll();
+            } else {
+                adapter.clearSelection();
+            }
+        });
+
+        // Bulk Actions
+        btnBulkApprove.setOnClickListener(v -> {
+            List<String> selectedIds = adapter.getSelectedReviewIds();
+            if (!selectedIds.isEmpty()) {
+                showConfirmDialog("Duyệt " + selectedIds.size() + " đánh giá?", () -> {
+                    viewModel.bulkApprove(selectedIds);
+                    adapter.clearSelection();
+                    cbSelectAll.setChecked(false);
+                });
+            }
+        });
+
+        btnBulkReject.setOnClickListener(v -> {
+            List<String> selectedIds = adapter.getSelectedReviewIds();
+            if (!selectedIds.isEmpty()) {
+                showConfirmDialog("Từ chối " + selectedIds.size() + " đánh giá?", () -> {
+                    viewModel.bulkReject(selectedIds);
+                    adapter.clearSelection();
+                    cbSelectAll.setChecked(false);
+                });
+            }
+        });
+    }
+
+    private void setupObservers() {
+        viewModel.getAllReviews().observe(getViewLifecycleOwner(), reviews -> {
+            allReviews = reviews;
+            filterReviews();
+        });
+
+        viewModel.getAllUsers().observe(getViewLifecycleOwner(), users -> {
+            adapter.setUsers(users);
+        });
+
+        viewModel.getAllPlaces().observe(getViewLifecycleOwner(), places -> {
+            adapter.setPlaces(places);
+        });
+
+        viewModel.getOperationSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success) {
+                Toast.makeText(getContext(), "Thao tác thành công", Toast.LENGTH_SHORT).show();
+                // Refresh data if needed, but Firestore listener should auto-update
+            }
+        });
+
+        viewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void filterReviews() {
+        List<Review> filteredList;
+        if ("all".equals(currentFilter)) {
+            filteredList = new ArrayList<>(allReviews);
+        } else {
+            filteredList = allReviews.stream()
+                    .filter(r -> r.getStatus() != null && currentFilter.equalsIgnoreCase(r.getStatus()))
+                    .collect(Collectors.toList());
+        }
+
+        adapter.setReviews(filteredList);
+
+        if (filteredList.isEmpty()) {
+            tvEmpty.setVisibility(View.VISIBLE);
+            rvReviews.setVisibility(View.GONE);
+        } else {
+            tvEmpty.setVisibility(View.GONE);
+            rvReviews.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showConfirmDialog(String message, Runnable onConfirm) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Xác nhận")
+                .setMessage(message)
+                .setPositiveButton("Đồng ý", (dialog, which) -> onConfirm.run())
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    @Override
+    public void onApprove(Review review) {
+        showConfirmDialog("Duyệt đánh giá này?", () -> viewModel.approveReview(review.getReviewId()));
+    }
+
+    @Override
+    public void onReject(Review review) {
+        showConfirmDialog("Từ chối đánh giá này?", () -> viewModel.rejectReview(review.getReviewId()));
+    }
+
+//    @Override
+//    public void onDelete(Review review) {
+//        showConfirmDialog("Xóa đánh giá này?", () -> viewModel.deleteReview(review.getReviewId()));
+//    }
+
+    @Override
+    public void onSelectionChanged(int selectedCount) {
+        if (selectedCount > 0) {
+            layoutBottomBar.setVisibility(View.VISIBLE);
+        } else {
+            layoutBottomBar.setVisibility(View.GONE);
+        }
     }
 }
