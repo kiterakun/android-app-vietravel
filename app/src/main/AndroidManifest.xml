@@ -49,6 +49,8 @@
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.VieTravel" />
+        <activity android:name=".admin.ui.main.AdminMainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

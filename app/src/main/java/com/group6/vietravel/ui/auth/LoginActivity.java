@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.group6.vietravel.R;
+import com.group6.vietravel.admin.ui.main.AdminMainActivity;
 import com.group6.vietravel.ui.main.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -85,19 +86,37 @@ public class LoginActivity extends AppCompatActivity {
 
     private void observeViewModel() {
 
-        // Lắng nghe lỗi
+        // 1. Lắng nghe lỗi (Giữ nguyên)
         authViewModel.getErrorLiveData().observe(this, error -> {
             if (error != null && !error.isEmpty()) {
                 Toast.makeText(this, "Lỗi: " + error, Toast.LENGTH_LONG).show();
             }
         });
 
-        // Lắng nghe kết quả đăng ký thành công
+        // 2. Lắng nghe Auth thành công -> Gọi check role (ĐÃ SỬA)
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                Toast.makeText(this, "Đăng nhập thành công! Đang chuyển hướng...", Toast.LENGTH_SHORT).show();
+                // Chưa chuyển màn hình vội, đi kiểm tra quyền trước
+                Toast.makeText(this, "Đang kiểm tra quyền truy cập...", Toast.LENGTH_SHORT).show();
+                authViewModel.checkUserRole(firebaseUser.getUid());
+            }
+        });
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        // 3. Lắng nghe Role để chuyển hướng (THÊM MỚI)
+        authViewModel.getRoleLiveData().observe(this, role -> {
+            if (role != null) {
+                Intent intent;
+
+                // Logic phân quyền
+                if ("admin".equals(role)) {
+                    // Chuyển sang màn hình Admin (Bạn cần tạo Activity này)
+                    intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                    Toast.makeText(this, "Xin chào Admin!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Chuyển sang màn hình User (MainActivity)
+                    intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                }
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

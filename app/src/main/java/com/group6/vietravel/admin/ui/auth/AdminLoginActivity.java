@@ -67,7 +67,7 @@ public class AdminLoginActivity extends AppCompatActivity {
                         finish();
                     } else {
                         Toast.makeText(this, "Bạn không có quyền Admin!", Toast.LENGTH_LONG).show();
-                        authViewModel.logout();
+//                        authViewModel.logout();
                     }
                 });
             }
