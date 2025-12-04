@@ -18,7 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.group6.vietravel.R;
-import com.group6.vietravel.features.ui.main.MainActivity;
+import com.group6.vietravel.features.user.ui.main.MainActivity;
 
 public class RegisterActivity extends AppCompatActivity {
 
