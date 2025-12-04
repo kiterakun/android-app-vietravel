@@ -20,15 +20,11 @@ public class FavoriteLocationViewModel extends AndroidViewModel {
         repository = PlaceRepository.getInstance(application.getApplicationContext());
     }
 
-    public LiveData<List<Place>> getPlaceList(){
-        return repository.getAllPlaces();
-    }
-
     public LiveData<List<Place>> getFavotitePlaceList(){
         return repository.getFavoritePlaces();
     }
 
     public void loadPlaces(){
-        repository.fetchAllPlaces();
+        repository.fetchFavoritePlaces();
     }
 }

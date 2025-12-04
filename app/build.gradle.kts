@@ -65,9 +65,11 @@ dependencies {
     // Thu vien HTTP de goi api tim duong di
     implementation("com.squareup.okhttp3:okhttp:5.3.2")
     // Thư viện Places
-    implementation("com.google.android.libraries.places:places:5.0.0")
+    implementation("com.google.android.libraries.places:places:5.1.1")
     // Thư viện dung de load anh
     implementation("com.github.bumptech.glide:glide:5.0.5")
     // Thu vien su ly json
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.13.2")
+    // Thu vien Google AI SDK for Android (Gemini)
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 }
