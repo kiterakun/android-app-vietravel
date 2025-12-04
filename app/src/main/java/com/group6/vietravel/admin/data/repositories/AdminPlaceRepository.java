@@ -10,7 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.group6.vietravel.data.models.Place;
+import com.group6.vietravel.data.models.place.Place;
 
 import java.util.ArrayList;
 import java.util.List;

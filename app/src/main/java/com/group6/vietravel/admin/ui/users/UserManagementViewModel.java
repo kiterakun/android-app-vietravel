@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.group6.vietravel.admin.data.repositories.AdminUserRepository;
-import com.group6.vietravel.data.models.User;
+import com.group6.vietravel.data.models.user.User;
 
 import java.util.List;
 

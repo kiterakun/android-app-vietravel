@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.group6.vietravel.R;
 import com.group6.vietravel.admin.ui.main.AdminMainActivity;
 import com.group6.vietravel.admin.utils.AdminAuthUtils;
-import com.group6.vietravel.ui.auth.AuthViewModel;
+import com.group6.vietravel.features.ui.auth.AuthViewModel;
 
 public class AdminLoginActivity extends AppCompatActivity {
 

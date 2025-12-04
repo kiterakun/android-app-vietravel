@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.group6.vietravel.data.models.Review;
+import com.group6.vietravel.data.models.review.Review;
 
 import java.util.ArrayList;
 import java.util.List;
