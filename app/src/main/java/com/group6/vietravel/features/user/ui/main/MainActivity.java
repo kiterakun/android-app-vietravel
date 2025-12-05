@@ -33,6 +33,7 @@ import com.group6.vietravel.features.user.ui.main.discovery.DiscoveryFragment;
 import com.group6.vietravel.features.user.ui.main.journey.favoriteLocation.FavoriteLocationViewModel;
 
 public class MainActivity extends AppCompatActivity {
+    //testing gitrepo
 
     private ActivityMainBinding binding;
     private MainViewModel mViewModel;
