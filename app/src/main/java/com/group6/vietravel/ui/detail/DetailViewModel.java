@@ -91,10 +91,10 @@ public class DetailViewModel extends AndroidViewModel {
         return false;
     }
 
-    public void setAiReview(Place place, List<Review> reviewList){
+    public void setAiReview(Place place){
         aiReview.postValue("Đang tổng hợp đánh giá, đợi chút nhé...");
 
-        geminiUtils.getReview(reviewList, place, new GeminiUtils.AiCallbackReview() {
+        geminiUtils.getReview(place, new GeminiUtils.AiCallbackReview() {
             @Override
             public void onSuccess(String response) {
                 aiReview.postValue(response);
