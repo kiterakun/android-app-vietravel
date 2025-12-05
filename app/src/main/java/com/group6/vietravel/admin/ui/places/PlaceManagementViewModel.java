@@ -65,4 +65,8 @@ public class PlaceManagementViewModel extends AndroidViewModel {
     public void updatePlace(Place place, List<Uri> newImageUris) {
         repository.updatePlace(place, newImageUris);
     }
+
+    public void resetStatus() {
+        repository.resetStatus();
+    }
 }

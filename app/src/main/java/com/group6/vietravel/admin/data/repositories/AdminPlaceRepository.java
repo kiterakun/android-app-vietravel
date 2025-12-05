@@ -215,4 +215,9 @@ public class AdminPlaceRepository {
     interface OnImagesUploadedListener {
         void onUploaded(List<String> urls);
     }
+
+    public void resetStatus() {
+        operationSuccessLiveData.postValue(false);
+        errorLiveData.postValue(null);
+    }
 }

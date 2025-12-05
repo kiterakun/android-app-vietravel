@@ -62,13 +62,17 @@ public class PlaceManagementFragment extends Fragment {
         });
 
         viewModel.getError().observe(getViewLifecycleOwner(), error -> {
-            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+            if (error != null && !error.isEmpty()) {
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                viewModel.resetStatus();
+            }
         });
 
         viewModel.getOperationSuccess().observe(getViewLifecycleOwner(), success -> {
             if(success) {
                 Toast.makeText(getContext(), "Thao tác thành công", Toast.LENGTH_SHORT).show();
                 // Có thể reload data nếu cần, nhưng LiveData thường tự cập nhật
+                viewModel.resetStatus();
             }
         });
 
@@ -77,10 +81,8 @@ public class PlaceManagementFragment extends Fragment {
 
         // 6. Sự kiện các nút chức năng
         btnAddNew.setOnClickListener(v -> {
-            // TODO: Mở màn hình AddEditPlaceActivity (sẽ làm ở bước sau)
-            // Intent intent = new Intent(getContext(), AddEditPlaceActivity.class);
-            // startActivity(intent);
-            Toast.makeText(getContext(), "Chức năng thêm mới đang phát triển", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getContext(), AdminPlaceEditorActivity.class);
+            startActivity(intent);
         });
 
         btnFilter.setOnClickListener(v -> {
@@ -98,11 +100,9 @@ public class PlaceManagementFragment extends Fragment {
         adapter = new AdminPlaceAdapter(getContext(), new AdminPlaceAdapter.OnPlaceActionListener() {
             @Override
             public void onEdit(Place place) {
-                // TODO: Mở màn hình Edit và truyền object Place sang
-                // Intent intent = new Intent(getContext(), AddEditPlaceActivity.class);
-                // intent.putExtra("place_data", place);
-                // startActivity(intent);
-                Toast.makeText(getContext(), "Sửa: " + place.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), AdminPlaceEditorActivity.class);
+                intent.putExtra("place_data", place); // Truyền object sang để sửa
+                startActivity(intent);
             }
 
             @Override
