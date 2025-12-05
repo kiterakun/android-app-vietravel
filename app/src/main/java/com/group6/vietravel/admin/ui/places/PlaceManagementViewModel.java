@@ -1,6 +1,7 @@
 package com.group6.vietravel.admin.ui.places;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -54,5 +55,14 @@ public class PlaceManagementViewModel extends AndroidViewModel {
     
     public void rejectPlace(String placeId) {
         repository.rejectPlace(placeId);
+    }
+
+    public void addPlace(Place place, List<Uri> imageUris) {
+        repository.addPlace(place, imageUris);
+    }
+
+    // Hàm cập nhật địa điểm
+    public void updatePlace(Place place, List<Uri> newImageUris) {
+        repository.updatePlace(place, newImageUris);
     }
 }

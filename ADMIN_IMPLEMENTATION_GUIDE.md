@@ -85,7 +85,6 @@ Dự án đã được setup cơ bản với:
 - ✅ Hide/Restore tài khoản (soft delete)
 - ✅ Delete tài khoản (có confirm)
 - ✅ Xem thống kê user: số review, số check-in, points
-- ✅ Cập nhật points thủ công
 
 **Code tham khảo:**
 - `ReviewAdapter.java`, `ReviewPlaceAdapter.java` - Hiển thị reviews

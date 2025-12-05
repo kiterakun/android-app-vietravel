@@ -1,72 +1,127 @@
 package com.group6.vietravel.admin.ui.places;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.group6.vietravel.R;
+import com.group6.vietravel.admin.ui.places.AdminPlaceAdapter;
+import com.group6.vietravel.data.models.place.Place;
 
-/**
- * NGƯỜI 1: QUẢN LÝ ĐỊA ĐIỂM (ADF01)
- * 
- * TODO List:
- * 1. Tạo PlaceManagementViewModel
- * 2. Tạo layout fragment_place_management.xml với:
- *    - SearchView
- *    - Filter buttons (All, Pending, Approved)
- *    - FloatingActionButton để thêm mới
- *    - RecyclerView để hiển thị danh sách
- * 3. Tạo AdminPlaceAdapter để hiển thị places
- * 4. Tạo layout item_admin_place.xml
- * 5. Tạo AddEditPlaceActivity để thêm/sửa địa điểm
- * 
- * Chức năng cần implement:
- * - Hiển thị danh sách địa điểm
- * - Tìm kiếm theo tên
- * - Filter theo trạng thái (All/Pending/Approved)
- * - Click item để xem chi tiết/edit
- * - Long click để hiện menu (Edit/Delete/Approve)
- * - FAB click để thêm địa điểm mới
- * 
- * Code tham khảo:
- * - app/src/main/java/com/group6/vietravel/ui/search/SearchActivity.java
- * - app/src/main/java/com/group6/vietravel/adapters/PlaceAdapter.java
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlaceManagementFragment extends Fragment {
 
     private PlaceManagementViewModel viewModel;
+    private RecyclerView recyclerView;
+    private AdminPlaceAdapter adapter;
+    private LinearLayout btnAddNew, btnFilter, btnToggleView;
+    private SearchView searchView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // TODO: Thay thế bằng layout thật
-        View view = inflater.inflate(R.layout.fragment_placeholder, container, false);
-        
-        TextView textView = view.findViewById(R.id.text_placeholder);
-        textView.setText("Place Management Fragment\n\nNGƯỜI 1: Implement chức năng quản lý địa điểm ở đây");
-        
-        return view;
+        return inflater.inflate(R.layout.fragment_place_management, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
+        // 1. Init ViewModel
         viewModel = new ViewModelProvider(this).get(PlaceManagementViewModel.class);
-        
-        // TODO: Initialize views
-        // TODO: Setup RecyclerView with adapter
-        // TODO: Setup SearchView
-        // TODO: Setup Filter buttons
-        // TODO: Setup FAB click listener
-        // TODO: Observe ViewModel LiveData
+
+        // 2. Bind View
+        recyclerView = view.findViewById(R.id.recycler_places);
+        btnAddNew = view.findViewById(R.id.btn_add_new);
+        btnFilter = view.findViewById(R.id.btn_filter);
+        btnToggleView = view.findViewById(R.id.btn_toggle_view);
+        searchView = view.findViewById(R.id.search_view);
+
+        // 3. Setup RecyclerView
+        setupRecyclerView();
+
+        // 4. Observe Data
+        viewModel.getAllPlaces().observe(getViewLifecycleOwner(), places -> {
+            adapter.setPlaces(places);
+        });
+
+        viewModel.getError().observe(getViewLifecycleOwner(), error -> {
+            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+        });
+
+        viewModel.getOperationSuccess().observe(getViewLifecycleOwner(), success -> {
+            if(success) {
+                Toast.makeText(getContext(), "Thao tác thành công", Toast.LENGTH_SHORT).show();
+                // Có thể reload data nếu cần, nhưng LiveData thường tự cập nhật
+            }
+        });
+
+        // 5. Load data ban đầu
+        viewModel.loadAllPlaces();
+
+        // 6. Sự kiện các nút chức năng
+        btnAddNew.setOnClickListener(v -> {
+            // TODO: Mở màn hình AddEditPlaceActivity (sẽ làm ở bước sau)
+            // Intent intent = new Intent(getContext(), AddEditPlaceActivity.class);
+            // startActivity(intent);
+            Toast.makeText(getContext(), "Chức năng thêm mới đang phát triển", Toast.LENGTH_SHORT).show();
+        });
+
+        btnFilter.setOnClickListener(v -> {
+            // TODO: Hiển thị dialog filter
+            Toast.makeText(getContext(), "Chức năng Filter", Toast.LENGTH_SHORT).show();
+        });
+
+        btnToggleView.setOnClickListener(v -> {
+            // TODO: Chuyển sang Map View (Nếu làm chung 1 Fragment thì ẩn Recycler hiện MapView)
+            Toast.makeText(getContext(), "Chuyển sang Map View", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void setupRecyclerView() {
+        adapter = new AdminPlaceAdapter(getContext(), new AdminPlaceAdapter.OnPlaceActionListener() {
+            @Override
+            public void onEdit(Place place) {
+                // TODO: Mở màn hình Edit và truyền object Place sang
+                // Intent intent = new Intent(getContext(), AddEditPlaceActivity.class);
+                // intent.putExtra("place_data", place);
+                // startActivity(intent);
+                Toast.makeText(getContext(), "Sửa: " + place.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDelete(Place place) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Xóa địa điểm")
+                        .setMessage("Bạn chắc chắn muốn xóa " + place.getName() + "?")
+                        .setPositiveButton("Xóa", (dialog, which) -> viewModel.deletePlace(place.getPlaceId()))
+                        .setNegativeButton("Hủy", null)
+                        .show();
+            }
+
+            @Override
+            public void onClick(Place place) {
+                Toast.makeText(getContext(), "Xem chi tiết: " + place.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
     }
 }
