@@ -6,17 +6,30 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.button.MaterialButton;
 import com.group6.vietravel.R;
 import com.group6.vietravel.admin.ui.places.AdminPlaceAdapter;
 import com.group6.vietravel.data.models.place.Place;
@@ -24,13 +37,33 @@ import com.group6.vietravel.data.models.place.Place;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceManagementFragment extends Fragment {
+// [QUAN TRỌNG] Thêm implements OnMapReadyCallback
+public class PlaceManagementFragment extends Fragment implements OnMapReadyCallback {
 
     private PlaceManagementViewModel viewModel;
+
+    // UI components
     private RecyclerView recyclerView;
     private AdminPlaceAdapter adapter;
     private LinearLayout btnAddNew, btnFilter, btnToggleView;
     private SearchView searchView;
+
+    // UI cho Toggle (Đổi chữ/Icon)
+    private TextView tvScreenTitle, tvToggleText;
+    private ImageView imgToggleIcon;
+
+    // UI cho Popup Map
+    private CardView cvPopup;
+    private TextView tvPopupName, tvPopupAddress;
+    private ImageView imgPopupThumb;
+    private MaterialButton btnPopupEdit, btnPopupDelete;
+    private ImageButton btnClosePopup;
+
+    // Map components
+    private GoogleMap mMap;
+    private View mapFragmentView;
+    private boolean isMapView = false; // Biến cờ: đang xem map hay list?
+    private List<Place> currentPlaceList = new ArrayList<>(); // Lưu list để hiển thị lên Map
 
     @Nullable
     @Override
@@ -46,19 +79,43 @@ public class PlaceManagementFragment extends Fragment {
         // 1. Init ViewModel
         viewModel = new ViewModelProvider(this).get(PlaceManagementViewModel.class);
 
-        // 2. Bind View
+        // 2. Bind View (Header & List)
         recyclerView = view.findViewById(R.id.recycler_places);
         btnAddNew = view.findViewById(R.id.btn_add_new);
         btnFilter = view.findViewById(R.id.btn_filter);
         btnToggleView = view.findViewById(R.id.btn_toggle_view);
         searchView = view.findViewById(R.id.search_view);
 
-        // 3. Setup RecyclerView
+        // Header Text & Icon
+        tvScreenTitle = view.findViewById(R.id.tv_screen_title);
+        tvToggleText = view.findViewById(R.id.tv_toggle_text);
+        imgToggleIcon = view.findViewById(R.id.img_toggle_icon);
+
+        // Popup View
+        cvPopup = view.findViewById(R.id.cv_place_info_popup);
+        tvPopupName = view.findViewById(R.id.tv_popup_name);
+        tvPopupAddress = view.findViewById(R.id.tv_popup_address);
+        imgPopupThumb = view.findViewById(R.id.img_popup_thumb);
+        btnPopupEdit = view.findViewById(R.id.btn_popup_edit);
+        btnPopupDelete = view.findViewById(R.id.btn_popup_delete);
+        btnClosePopup = view.findViewById(R.id.btn_close_popup);
+
+        // 3. Setup Map
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map_fragment);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+            mapFragmentView = mapFragment.getView(); // Lấy view để ẩn/hiện
+        }
+
+        // 4. Setup RecyclerView
         setupRecyclerView();
 
-        // 4. Observe Data
+        // 5. Observe Data
         viewModel.getAllPlaces().observe(getViewLifecycleOwner(), places -> {
+            currentPlaceList = places; // Lưu lại để dùng cho Map
             adapter.setPlaces(places);
+            updateMapMarkers(places); // Cập nhật marker trên map
         });
 
         viewModel.getError().observe(getViewLifecycleOwner(), error -> {
@@ -71,28 +128,129 @@ public class PlaceManagementFragment extends Fragment {
         viewModel.getOperationSuccess().observe(getViewLifecycleOwner(), success -> {
             if(success) {
                 Toast.makeText(getContext(), "Thao tác thành công", Toast.LENGTH_SHORT).show();
-                // Có thể reload data nếu cần, nhưng LiveData thường tự cập nhật
+                cvPopup.setVisibility(View.GONE); // Ẩn popup nếu đang hiện
                 viewModel.resetStatus();
             }
         });
 
-        // 5. Load data ban đầu
+        // 6. Load data ban đầu
         viewModel.loadAllPlaces();
 
-        // 6. Sự kiện các nút chức năng
+        // 7. Sự kiện Click
         btnAddNew.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), AdminPlaceEditorActivity.class);
             startActivity(intent);
         });
 
         btnFilter.setOnClickListener(v -> {
-            // TODO: Hiển thị dialog filter
-            Toast.makeText(getContext(), "Chức năng Filter", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Chức năng Filter (Coming soon)", Toast.LENGTH_SHORT).show();
         });
 
-        btnToggleView.setOnClickListener(v -> {
-            // TODO: Chuyển sang Map View (Nếu làm chung 1 Fragment thì ẩn Recycler hiện MapView)
-            Toast.makeText(getContext(), "Chuyển sang Map View", Toast.LENGTH_SHORT).show();
+        // Toggle Logic: Chuyển đổi Map <-> List
+        btnToggleView.setOnClickListener(v -> toggleViewMode());
+
+        // Popup Logic
+        btnClosePopup.setOnClickListener(v -> cvPopup.setVisibility(View.GONE));
+    }
+
+    private void toggleViewMode() {
+        isMapView = !isMapView; // Đổi trạng thái
+
+        if (isMapView) {
+            // Hiển thị Map
+            recyclerView.setVisibility(View.GONE);
+            if (mapFragmentView != null) mapFragmentView.setVisibility(View.VISIBLE);
+
+            // Cập nhật Header
+            tvScreenTitle.setText("Bản đồ địa điểm");
+            tvToggleText.setText("List");
+            imgToggleIcon.setImageResource(R.drawable.ic_discovery); // Hoặc icon list nếu bạn có
+        } else {
+            // Hiển thị List
+            recyclerView.setVisibility(View.VISIBLE);
+            if (mapFragmentView != null) mapFragmentView.setVisibility(View.GONE);
+            cvPopup.setVisibility(View.GONE); // Ẩn popup map đi
+
+            // Cập nhật Header
+            tvScreenTitle.setText("Danh sách địa điểm");
+            tvToggleText.setText("Map");
+            imgToggleIcon.setImageResource(R.drawable.ic_discovery); // Icon map
+        }
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Cấu hình Map
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        // Mặc định zoom vào VN hoặc TP.HCM
+        LatLng hcm = new LatLng(10.762622, 106.660172);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcm, 10));
+
+        // Nếu đã có data thì hiển thị luôn
+        if (!currentPlaceList.isEmpty()) {
+            updateMapMarkers(currentPlaceList);
+        }
+
+        // Click vào Marker -> Hiện Popup
+        mMap.setOnMarkerClickListener(marker -> {
+            Place place = (Place) marker.getTag(); // Lấy data từ tag
+            if (place != null) {
+                showPopup(place);
+            }
+            return false;
+        });
+
+        // Click ra ngoài -> Ẩn Popup
+        mMap.setOnMapClickListener(latLng -> cvPopup.setVisibility(View.GONE));
+    }
+
+    private void updateMapMarkers(List<Place> places) {
+        if (mMap == null) return;
+        mMap.clear();
+
+        for (Place place : places) {
+            // Chỉ hiện marker nếu có tọa độ (khác 0)
+            if (place.getLatitude() != 0 && place.getLongitude() != 0) {
+                LatLng pos = new LatLng(place.getLatitude(), place.getLongitude());
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(pos)
+                        .title(place.getName()));
+
+                // Gắn object Place vào marker để dùng lại khi click
+                if (marker != null) marker.setTag(place);
+            }
+        }
+    }
+
+    private void showPopup(Place place) {
+        cvPopup.setVisibility(View.VISIBLE);
+        tvPopupName.setText(place.getName());
+        tvPopupAddress.setText(place.getAddress());
+
+        // Load ảnh thumbnail (dùng Glide)
+        if (place.getThumbnailUrl() != null && !place.getThumbnailUrl().isEmpty()) {
+            Glide.with(this).load(place.getThumbnailUrl()).into(imgPopupThumb);
+        } else {
+            imgPopupThumb.setImageResource(R.drawable.ic_launcher_background);
+        }
+
+        // Gán sự kiện cho nút Sửa/Xóa trong Popup
+        btnPopupEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AdminPlaceEditorActivity.class);
+            intent.putExtra("place_data", place);
+            startActivity(intent);
+        });
+
+        btnPopupDelete.setOnClickListener(v -> {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Xóa địa điểm")
+                    .setMessage("Bạn chắc chắn muốn xóa " + place.getName() + "?")
+                    .setPositiveButton("Xóa", (dialog, which) -> viewModel.deletePlace(place.getPlaceId()))
+                    .setNegativeButton("Hủy", null)
+                    .show();
         });
     }
 
@@ -101,7 +259,7 @@ public class PlaceManagementFragment extends Fragment {
             @Override
             public void onEdit(Place place) {
                 Intent intent = new Intent(getContext(), AdminPlaceEditorActivity.class);
-                intent.putExtra("place_data", place); // Truyền object sang để sửa
+                intent.putExtra("place_data", place);
                 startActivity(intent);
             }
 
