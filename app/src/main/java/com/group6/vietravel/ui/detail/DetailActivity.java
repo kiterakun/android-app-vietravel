@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -47,8 +48,6 @@ public class DetailActivity extends AppCompatActivity {
     private TextInputEditText edt_comment;
     private RatingBar rb_user_rating, ratingAvg;
 
-    private boolean hasAiReview = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +56,22 @@ public class DetailActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        View root = findViewById(R.id.main);
+
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+
+            v.setPadding(
+                    systemBars.left,
+                    systemBars.top,
+                    systemBars.right,
+                    Math.max(systemBars.bottom, ime.bottom)
+            );
+
             return insets;
         });
 
@@ -115,10 +130,6 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Review> reviews) {
                 adapter.updateData(reviews);
-                if(!hasAiReview){
-                    detailViewModel.setAiReview(place,reviews);
-                    hasAiReview = true;
-                }
             }
         });
 
@@ -130,6 +141,8 @@ public class DetailActivity extends AppCompatActivity {
 
             startActivity(new_intent);
         });
+
+        detailViewModel.setAiReview(place);
 
         detailViewModel.getAiReview().observe(this, new Observer<String>() {
             @Override

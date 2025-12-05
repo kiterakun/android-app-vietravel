@@ -53,6 +53,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -332,9 +333,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Chia sẻ trải nghiệm của bạn..."
+                            android:textColorHint="@color/black"
                             app:boxBackgroundColor="@color/white"
                             app:boxStrokeColor="@color/blue"
-                            app:hintTextColor="@color/gray">
+                            app:hintTextColor="@color/black">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edt_comment"

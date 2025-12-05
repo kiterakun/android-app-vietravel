@@ -10,11 +10,14 @@ import com.google.ai.client.generativeai.type.GenerationConfig;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.gson.Gson;
 import com.group6.vietravel.data.models.AiResponse;
 import com.group6.vietravel.data.models.Place;
 import com.group6.vietravel.data.models.Review;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -117,60 +120,73 @@ public class GeminiUtils {
         }, executor);
     }
 
-    public void getReview(List<Review> allReviews, Place place,AiCallbackReview callback) {
 
-        StringBuilder reviewsContext = new StringBuilder();
-        reviewsContext.append("Danh sách các bình luận của "+place.getName()+":\n");
 
-        if(allReviews!=null) {
-            for (Review r : allReviews) {
-                reviewsContext.append("- ")
-                        .append(r.getComment())
-                        .append("\n");
-            }
-        }
-        else {
-            reviewsContext.append("Không có bình luận nào");
-        }
+    public void getReview(Place place,AiCallbackReview callback) {
+        FirebaseFirestore.getInstance().collection("reviews").whereEqualTo("status", "approved")
+                .whereEqualTo("place_id",place.getPlaceId())
+                .orderBy("created_at", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener((value) -> {
+                    List<Review> reviewList = new ArrayList<>();
+                    if(value!=null){
+                        reviewList = value.toObjects(Review.class);
 
-        // Tạo Prompt
-        String prompt = String.format(
-                "Bạn là một trợ lý đánh giá các địa điểm của VieTravel.\n" +
-                        "%s\n" +
-                        "Yêu cầu:\n" +
-                        "1. Trả lời thân thiện và ngắn gọn khoảng 30 chữ, bằng tiếng Việt.\n" +
-                        "2. Hãy tìm kiếm thông tin về địa điểm và tổng hợp từ danh sách trên đưa ra đánh giá phù hợp NHẤT cho địa điểm.\n" +
-                        "3. CHỈ TRẢ VỀ JSON theo định dạng sau (không thêm markdown).\n" +
-                        "{\n" +
-                        "  \"message\": \"Câu trả lời của bạn cho người dùng...\",\n" +
-                        "}",
-                reviewsContext.toString()
-        );
+                        StringBuilder reviewsContext = new StringBuilder();
+                        reviewsContext.append("Danh sách các bình luận của "+place.getName()+":\n");
 
-        // Gửi yêu cầu
-        Content content = new Content.Builder().addText(prompt).build();
-        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
+                        if(!reviewList.isEmpty()) {
+                            for (Review r : reviewList) {
+                                reviewsContext.append("- ")
+                                        .append(r.getComment())
+                                        .append("\n");
+                            }
+                        }
+                        else {
+                            reviewsContext.append("Không có bình luận nào");
+                        }
 
-        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
-            @Override
-            public void onSuccess(GenerateContentResponse result) {
-                String jsonText = result.getText();
-                Log.d(TAG, "AI Raw Response: " + jsonText);
+                        // Tạo Prompt
+                        String prompt = String.format(
+                                "Bạn là một trợ lý đánh giá các địa điểm của VieTravel.\n" +
+                                        "%s\n" +
+                                        "Yêu cầu:\n" +
+                                        "1. Trả lời thân thiện và ngắn gọn khoảng 30 chữ, bằng tiếng Việt.\n" +
+                                        "2. Hãy tìm kiếm thông tin về địa điểm và tổng hợp từ danh sách trên đưa ra đánh giá phù hợp NHẤT cho địa điểm.\n" +
+                                        "3. CHỈ TRẢ VỀ JSON theo định dạng sau (không thêm markdown).\n" +
+                                        "{\n" +
+                                        "  \"message\": \"Câu trả lời của bạn cho người dùng...\",\n" +
+                                        "}",
+                                reviewsContext.toString()
+                        );
 
-                try {
-                    AiResponse aiResponse = gson.fromJson(jsonText, AiResponse.class);
-                    callback.onSuccess(aiResponse.getMessage());
-                } catch (Exception e) {
-                    Log.e(TAG, "Lỗi Parse JSON", e);
-                    callback.onError(e);
-                }
-            }
+                        // Gửi yêu cầu
+                        Content content = new Content.Builder().addText(prompt).build();
+                        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
 
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e(TAG, "Lỗi gọi API", t);
-                callback.onError(t);
-            }
-        }, executor);
+                        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+                            @Override
+                            public void onSuccess(GenerateContentResponse result) {
+                                String jsonText = result.getText();
+                                Log.d(TAG, "AI Raw Response: " + jsonText);
+
+                                try {
+                                    AiResponse aiResponse = gson.fromJson(jsonText, AiResponse.class);
+                                    callback.onSuccess(aiResponse.getMessage());
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Lỗi Parse JSON", e);
+                                    callback.onError(e);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                Log.e(TAG, "Lỗi gọi API", t);
+                                callback.onError(t);
+                            }
+                        }, executor);
+                    }
+
+                });
     }
 }
