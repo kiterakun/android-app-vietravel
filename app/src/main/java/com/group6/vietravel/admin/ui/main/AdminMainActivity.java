@@ -17,11 +17,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.group6.vietravel.R;
-import com.group6.vietravel.admin.ui.auth.AdminLoginActivity;
 import com.group6.vietravel.admin.ui.places.PlaceManagementFragment;
 import com.group6.vietravel.admin.ui.reviews.ReviewModerationFragment;
 import com.group6.vietravel.admin.ui.users.UserManagementFragment;
 import com.group6.vietravel.admin.ui.notifications.NotificationFragment;
+import com.group6.vietravel.features.ui.auth.LoginActivity;
 
 public class AdminMainActivity extends AppCompatActivity 
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -97,7 +97,9 @@ public class AdminMainActivity extends AppCompatActivity
     private void logout() {
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, AdminLoginActivity.class);
+
+
+        Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

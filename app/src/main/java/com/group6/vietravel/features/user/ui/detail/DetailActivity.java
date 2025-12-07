@@ -177,7 +177,6 @@ public class DetailActivity extends AppCompatActivity {
 
         String imageUrl = place.getThumbnailUrl();
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            Log.d("DEBUG_DETAIL", "1");
             Glide.with(DetailActivity.this)
                     .load(imageUrl) // Tải từ URL
                     .into(imagePlace); // Đặt vào ImageView
@@ -189,32 +188,21 @@ public class DetailActivity extends AppCompatActivity {
         tv_address.setText(place.getAddress());
         tv_rating_count.setText("(" + place.getRatingCount() + ")");
         tv_price_range.setText("$$ - " +place.getPriceRange());
-        Log.d("DEBUG_DETAIL", "1.1");
 
-//        if(!place.getPhoneNumber().isEmpty()) {
-//            Log.d("DEBUG_DETAIL", "2");
-//            tv_phone.setText(place.getPhoneNumber());
-//        }
         String phone = place.getPhoneNumber();
         if (phone != null && !phone.isEmpty()) {
-            Log.d("DEBUG_DETAIL", "2");
             tv_phone.setText(phone);
         }
 
-        Log.d("DEBUG_DETAIL", "2.1");
         if(!place.getOpeningHours().isEmpty()) {
-            Log.d("DEBUG_DETAIL", "3");
             for(int i=0;i<place.getOpeningHours().size();i++){
                 tv_opening_hours.append("\n" + place.getOpeningHours().get(i));
             }
         }
-        Log.d("DEBUG_DETAIL", "3.1");
         String website = place.getWebsiteUri();
         if (website != null && !website.isBlank()) {
-            Log.d("DEBUG_DETAIL", "4");
             tv_website_uri.setText(website);
         }
-        Log.d("DEBUG_DETAIL", "4.1");
 
         btn_submit_review.setOnClickListener(v -> {
             String comment = edt_comment.getText().toString().trim();
@@ -228,6 +216,5 @@ public class DetailActivity extends AppCompatActivity {
                 rb_user_rating.setRating(0);
             }
         });
-        Log.d("DEBUG_DETAIL", "Out function");
     }
 }
