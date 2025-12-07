@@ -3,9 +3,12 @@ package com.group6.vietravel.admin.ui.places;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,7 +49,7 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
     private RecyclerView recyclerView;
     private AdminPlaceAdapter adapter;
     private LinearLayout btnAddNew, btnFilter, btnToggleView;
-    private SearchView searchView;
+    private EditText searchView;
 
     // UI cho Toggle (Đổi chữ/Icon)
     private TextView tvScreenTitle, tvToggleText;
@@ -146,18 +149,16 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
             startActivity(intent);
         });
 
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+        searchView.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterPlaces(query);
-                return false;
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                filterPlaces(newText); // Lọc ngay khi gõ
-                return false;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterPlaces(s.toString()); // Lọc ngay khi gõ
             }
+            @Override
+            public void afterTextChanged(Editable s) { }
         });
 
         btnFilter.setOnClickListener(v -> {

@@ -1,6 +1,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
-    <EditText android:id="@+id/etTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Tiêu đề thông báo" />
-    <EditText android:id="@+id/etMessage" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:gravity="top" android:hint="Nội dung thông báo..." android:layout_marginTop="16dp"/>
-    <Button android:id="@+id/btnSend" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gửi Thông Báo" />
+    <EditText
+        android:id="@+id/etTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tiêu đề thông báo" />
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:hint="Nội dung thông báo..."
+        android:layout_marginTop="16dp"/>
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gửi Thông Báo" />
 </LinearLayout>
