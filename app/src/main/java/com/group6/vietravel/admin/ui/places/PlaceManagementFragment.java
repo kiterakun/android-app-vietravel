@@ -65,6 +65,10 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
     private boolean isMapView = false; // Biến cờ: đang xem map hay list?
     private List<Place> currentPlaceList = new ArrayList<>(); // Lưu list để hiển thị lên Map
 
+    private final String[] FILTER_CATS = {"Tất cả", "Vui chơi", "Ăn uống", "Tâm linh", "Thiên nhiên", "Lịch sử"};
+    private final String[] FILTER_CAT_IDS = {"all", "entertainment", "food", "spiritual", "nature", "history"};
+    private final String[] FILTER_PRICES = {"Tất cả", "Thấp", "Trung bình", "Cao"};
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -142,7 +146,22 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
             startActivity(intent);
         });
 
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterPlaces(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterPlaces(newText); // Lọc ngay khi gõ
+                return false;
+            }
+        });
+
         btnFilter.setOnClickListener(v -> {
+            showFilterDialog();
             Toast.makeText(getContext(), "Chức năng Filter (Coming soon)", Toast.LENGTH_SHORT).show();
         });
 
@@ -281,5 +300,100 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+    }
+
+    // Hàm lọc danh sách theo từ khóa
+    private void filterPlaces(String text) {
+        List<Place> fullList = viewModel.getAllPlaces().getValue();
+        if (fullList == null) return;
+
+        List<Place> filteredList = new ArrayList<>();
+
+        // Nếu ô tìm kiếm rỗng -> Lấy tất cả
+        if (text == null || text.isEmpty()) {
+            filteredList.addAll(fullList);
+        } else {
+            String query = text.toLowerCase().trim();
+            for (Place item : fullList) {
+                // Lọc theo Tên hoặc Địa chỉ
+                if (item.getName().toLowerCase().contains(query) ||
+                        item.getAddress().toLowerCase().contains(query)) {
+                    filteredList.add(item);
+                }
+            }
+        }
+
+        // Cập nhật lại UI (Cả List và Map)
+        currentPlaceList = filteredList; // Cập nhật biến toàn cục
+        adapter.setPlaces(filteredList);
+        updateMapMarkers(filteredList);
+    }
+
+    private void showFilterDialog() {
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog =
+                new com.google.android.material.bottomsheet.BottomSheetDialog(requireContext());
+
+        // Gán layout vừa tạo
+        dialog.setContentView(R.layout.dialog_admin_filter);
+
+        // Ánh xạ View trong Dialog
+        android.widget.Spinner spinCat = dialog.findViewById(R.id.spinner_filter_category);
+        android.widget.Spinner spinPrice = dialog.findViewById(R.id.spinner_filter_price);
+        MaterialButton btnApply = dialog.findViewById(R.id.btn_apply_filter);
+        MaterialButton btnReset = dialog.findViewById(R.id.btn_reset_filter);
+
+        // Setup dữ liệu cho Spinner
+        android.widget.ArrayAdapter<String> catAdapter = new android.widget.ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, FILTER_CATS);
+        catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinCat.setAdapter(catAdapter);
+
+        android.widget.ArrayAdapter<String> priceAdapter = new android.widget.ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, FILTER_PRICES);
+        priceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinPrice.setAdapter(priceAdapter);
+
+        // Nút Áp dụng
+        btnApply.setOnClickListener(v -> {
+            int catPos = spinCat.getSelectedItemPosition();
+            int pricePos = spinPrice.getSelectedItemPosition();
+
+            String selectedCatId = FILTER_CAT_IDS[catPos];
+            String selectedPrice = FILTER_PRICES[pricePos];
+
+            applyFilter(selectedCatId, selectedPrice);
+            dialog.dismiss();
+        });
+
+        // Nút Reset
+        btnReset.setOnClickListener(v -> {
+            applyFilter("all", "Tất cả");
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    // Hàm xử lý logic lọc
+    private void applyFilter(String catId, String price) {
+        List<Place> fullList = viewModel.getAllPlaces().getValue();
+        if (fullList == null) return;
+
+        List<Place> filtered = new ArrayList<>();
+
+        for (Place p : fullList) {
+            boolean matchCat = catId.equals("all") || (p.getCategoryId() != null && p.getCategoryId().equals(catId));
+            boolean matchPrice = price.equals("Tất cả") || (p.getPriceRange() != null && p.getPriceRange().equals(price));
+
+            if (matchCat && matchPrice) {
+                filtered.add(p);
+            }
+        }
+
+        // Cập nhật UI
+        currentPlaceList = filtered;
+        adapter.setPlaces(filtered);
+        updateMapMarkers(filtered);
+
+        String message = "Đã lọc: " + filtered.size() + " kết quả";
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
