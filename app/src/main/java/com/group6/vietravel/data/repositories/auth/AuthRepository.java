@@ -1,15 +1,23 @@
 package com.group6.vietravel.data.repositories.auth;
 
 import android.app.Application;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.group6.vietravel.core.utils.ImageUtils;
 import com.group6.vietravel.data.models.user.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthRepository {
 
@@ -122,6 +130,67 @@ public class AuthRepository {
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Lỗi khi lấy hồ sơ người dùng", e);
                     userProfileLiveData.postValue(null);
+                });
+    }
+
+    public void updateUserProfile(Uri uri, String username, String email){
+        String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+        if (uid == null) {
+            userProfileLiveData.postValue(null);
+            return;
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("username", username);
+        updates.put("email", email);
+
+        ImageUtils imageUtils = new ImageUtils();
+        if(uri!=null) {
+            imageUtils.uploadImage(uri, new ImageUtils.OnUploadImage() {
+                @Override
+                public void onSuccess(String s) {
+                    updates.put("avatar_url", s);
+
+                    db.collection("users").document(uid)
+                            .update(updates)
+                            .addOnSuccessListener(aVoid -> {
+                                fetchUserProfile(uid);
+                            });
+                }
+            });
+        }
+        else{
+            db.collection("users").document(uid)
+                    .update(updates)
+                    .addOnSuccessListener(aVoid -> {
+                        fetchUserProfile(uid);
+                    });
+        }
+
+    }
+
+    public void changePassword(String currPassword ,String newPassword){
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            userProfileLiveData.postValue(null);
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(user.getEmail(), currPassword);
+
+        user.reauthenticate(credential)
+                .addOnSuccessListener(aVoid -> {
+                    user.updatePassword(newPassword)
+                            .addOnSuccessListener(aVoid2 -> {
+                                Log.v(TAG,"Change password successful!");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG,"Change password error!",e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG,"Sai mk!",e);
                 });
     }
 

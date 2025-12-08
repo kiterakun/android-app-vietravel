@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".ui.auth.RegisterActivity">
+    tools:context=".features.ui.auth.RegisterActivity">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -56,147 +56,112 @@
                 android:layout_marginHorizontal="24dp"
                 android:orientation="vertical">
                 <LinearLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
                     android:orientation="vertical">
-                    <LinearLayout
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="3dp"
                         android:layout_marginBottom="16dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:textColor="#374151"
-                            android:textSize="14sp"
-                            android:layout_marginBottom="11dp"
-                            android:layout_marginStart="1dp"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="Email"
-                            />
-                        <EditText
-                            android:inputType="text"
-                            android:hint="Nhập email"
+                        android:hint="Email"
+                        android:textColorHint="@color/gray"
+                        app:boxStrokeColor="@color/blue"
+                        app:hintTextColor="@color/blue"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusBottomEnd="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextEmail"
-                            android:textColor="#374151"
-                            android:textColorHint="#374151"
-                            android:textSize="16sp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/shape_rounded_corners_8dp"
-                            android:paddingVertical="16dp"
-                            android:paddingHorizontal="17dp"
-                            />
-                    </LinearLayout>
-                    <LinearLayout
+                            android:inputType="textEmailAddress"
+                            android:textColor="#374151"
+                            android:textSize="16sp"
+                            android:paddingVertical="16dp"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="3dp"
                         android:layout_marginBottom="16dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:textColor="#374151"
-                            android:textSize="14sp"
-                            android:layout_marginBottom="11dp"
-                            android:layout_marginStart="1dp"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="Họ và tên"
-                            />
-                        <EditText
-                            android:inputType="text"
-                            android:hint="Nhập họ và tên"
+                        android:hint="Họ và tên"
+                        android:textColorHint="@color/gray"
+                        app:boxStrokeColor="@color/blue"
+                        app:hintTextColor="@color/blue"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusBottomEnd="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextFullName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
                             android:textColor="#374151"
-                            android:textColorHint="#374151"
                             android:textSize="16sp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/shape_rounded_corners_8dp"
-                            android:paddingVertical="16dp"
-                            android:paddingHorizontal="17dp"
-                            />
-                    </LinearLayout>
-                    <LinearLayout
+                            android:paddingVertical="16dp"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="3dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:textColor="#374151"
-                            android:textSize="14sp"
-                            android:layout_marginBottom="11dp"
-                            android:layout_marginStart="1dp"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="Mật khẩu"
-                            />
-                        <LinearLayout
+                        android:layout_marginBottom="16dp"
+                        android:hint="Mật khẩu"
+                        android:textColorHint="@color/gray"
+                        app:boxStrokeColor="@color/blue"
+                        app:hintTextColor="@color/blue"
+                        app:endIconMode="password_toggle"
+                        app:endIconTint="@color/gray"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusBottomEnd="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/shape_rounded_corners_8dp"
-                            android:paddingRight="17dp"
-                            android:orientation="horizontal">
-                            <EditText
-                                android:inputType="textPassword"
-                                android:hint="Nhập mật khẩu"
-                                android:background="@null"
-                                android:id="@+id/editTextPassword"
-                                android:textColor="#374151"
-                                android:textColorHint="#374151"
-                                android:textSize="16sp"
-                                android:layout_marginEnd="4dp"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:paddingVertical="17dp"
-                                android:paddingLeft="17dp"
-                                />
-                        </LinearLayout>
+                            android:inputType="textPassword"
+                            android:textColor="#374151"
+                            android:textSize="16sp"
+                            android:paddingVertical="16dp"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    </LinearLayout>
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="3dp"
-                        android:layout_marginTop="16dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:textColor="#374151"
-                            android:textSize="14sp"
-                            android:layout_marginBottom="11dp"
-                            android:layout_marginStart="1dp"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="Xác nhận mật khẩu"
-                            />
-                        <LinearLayout
+                        android:hint="Xác nhận mật khẩu"
+                        android:textColorHint="@color/gray"
+                        app:boxStrokeColor="@color/blue"
+                        app:hintTextColor="@color/blue"
+                        app:endIconMode="password_toggle"
+                        app:endIconTint="@color/gray"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusBottomEnd="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editTextComfirmPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/shape_rounded_corners_8dp"
-                            android:paddingRight="17dp"
-                            android:orientation="horizontal">
-                            <EditText
-                                android:inputType="textPassword"
-                                android:hint="Nhập mật khẩu"
-                                android:background="@null"
-                                android:id="@+id/editTextComfirmPassword"
-                                android:textColor="#374151"
-                                android:textColorHint="#374151"
-                                android:textSize="16sp"
-                                android:layout_marginEnd="4dp"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:paddingVertical="17dp"
-                                android:paddingLeft="17dp"
-                                />
-                        </LinearLayout>
+                            android:inputType="textPassword"
+                            android:textColor="#374151"
+                            android:textSize="16sp"
+                            android:paddingVertical="16dp"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"

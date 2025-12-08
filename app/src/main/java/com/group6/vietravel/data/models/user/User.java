@@ -42,4 +42,10 @@ public class User {
     public void setAvatar_url(String avatar_url) {
         this.avatar_url = avatar_url;
     }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
