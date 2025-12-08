@@ -333,7 +333,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Chia sẻ trải nghiệm của bạn..."
-                            android:textColorHint="@color/black"
+                            android:textColorHint="@color/gray"
                             app:boxBackgroundColor="@color/white"
                             app:boxStrokeColor="@color/blue"
                             app:hintTextColor="@color/black">

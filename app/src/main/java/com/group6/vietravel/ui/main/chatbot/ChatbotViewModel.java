@@ -50,6 +50,8 @@ public class ChatbotViewModel extends AndroidViewModel {
     public void sendMessageToAi(String userText) {
         isLoading.postValue(true);
 
+        botMessageLiveData.postValue(new Pair<>("Đang tải, đợi xíu nhé...",new ArrayList<>()));
+
         geminiUtils.getRecommendation(userText, cachedPlaces, new GeminiUtils.AiCallback() {
             @Override
             public void onSuccess(AiResponse response) {
