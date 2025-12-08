@@ -11,8 +11,11 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<Place> selectedPlace;
 
+    private MutableLiveData<String> pendingPlaceId;
+
     public MainViewModel() {
         selectedPlace = new MutableLiveData<Place>();
+        pendingPlaceId = new MutableLiveData<>();
     }
 
     public LiveData<Place> getSelectedPlace() {
@@ -20,7 +23,17 @@ public class MainViewModel extends ViewModel {
         return selectedPlace;
     }
 
-    public void selectPlace(Place place){
+    public void selectPlace(Place place) {
         selectedPlace.setValue(place);
+    }
+
+    public LiveData<String> getPendingPlaceId() {
+
+        return pendingPlaceId;
+    }
+
+    public void pendingPlaceId(String placeId) {
+        pendingPlaceId.setValue(placeId);
+
     }
 }

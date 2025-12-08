@@ -187,6 +187,8 @@ public class GeminiUtils {
                         }, executor);
                     }
 
+                }).addOnFailureListener(e -> {
+                   Log.v(TAG,"Khong fetch dc",e);
                 });
     }
 }

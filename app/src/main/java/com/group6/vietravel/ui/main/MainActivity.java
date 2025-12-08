@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private MainViewModel mViewModel;
     private BottomNavigationView navView;
-    public String pendingPlaceId = null;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         String placeId = intent.getStringExtra("TARGET_LOCATION_ID");
 
         if (placeId != null) {
-            this.pendingPlaceId = placeId;
+            mViewModel.pendingPlaceId(placeId);
             navView.setSelectedItemId(R.id.navigation_discovery);
         }
     }
@@ -73,16 +72,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-        String placeId = getIntent().getStringExtra("TARGET_LOCATION_ID");
-
-        if (placeId != null) {
-            Fragment foundFragment = getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-
-            if (foundFragment instanceof DiscoveryFragment) {
-                ((DiscoveryFragment) foundFragment).highlightLocation(placeId);
-            }
-        }
 
         mViewModel.getSelectedPlace().observe(this, new Observer<Place>() {
             @Override

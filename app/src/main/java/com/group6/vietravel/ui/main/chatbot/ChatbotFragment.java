@@ -70,11 +70,15 @@ public class ChatbotFragment extends Fragment {
         chatbotViewModel.getBotMessage().observe(getViewLifecycleOwner(), new Observer<Pair<String, List<Place>>>() {
             @Override
             public void onChanged(Pair<String, List<Place>> stringListPair) {
-                new Handler().postDelayed(() -> {
-                    chatList.add(new ChatMessage(stringListPair.first, stringListPair.second));
-                    adapter.notifyItemInserted(chatList.size() - 1);
-                    rv_chat.smoothScrollToPosition(chatList.size() - 1);
-                }, 500);
+
+                if(chatList.get(chatList.size() - 1).getContent().equals("Đang tải, đợi xíu nhé...")) {
+                    chatList.remove(chatList.size() - 1);
+                    adapter.notifyItemRemoved(chatList.size() - 1);
+                }
+
+                chatList.add(new ChatMessage(stringListPair.first, stringListPair.second));
+                adapter.notifyItemInserted(chatList.size() - 1);
+                rv_chat.smoothScrollToPosition(chatList.size() - 1);
             }
         });
 
