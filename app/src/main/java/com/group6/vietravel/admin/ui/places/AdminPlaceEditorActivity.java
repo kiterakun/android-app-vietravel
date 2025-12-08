@@ -100,12 +100,12 @@ public class AdminPlaceEditorActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        ArrayAdapter<String> catAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CATEGORIES);
-        catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> catAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, CATEGORIES);
+        catAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerCategory.setAdapter(catAdapter);
 
-        ArrayAdapter<String> priceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PRICES);
-        priceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> priceAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, PRICES);
+        priceAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerPrice.setAdapter(priceAdapter);
     }
 
