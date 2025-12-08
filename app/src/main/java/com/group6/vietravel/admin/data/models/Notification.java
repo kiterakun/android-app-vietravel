@@ -1,6 +1,11 @@
 package com.group6.vietravel.admin.data.models; // ⚠️ Package đã sửa
 
+import com.google.firebase.firestore.DocumentId;
+
 public class Notification {
+
+    //Dùng @DocumentId là lúc lấy từ firestore nó tự ánh xạ id qua nha
+    @DocumentId
     private String id;
     private String title;
     private String message;

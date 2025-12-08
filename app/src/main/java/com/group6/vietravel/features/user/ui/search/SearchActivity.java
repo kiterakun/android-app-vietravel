@@ -2,6 +2,9 @@ package com.group6.vietravel.features.user.ui.search;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 
 import android.widget.EditText;
@@ -39,9 +42,10 @@ public class SearchActivity extends AppCompatActivity {
     private ImageButton btn_filter;
     private ImageButton btn_back;
     private EditText edt_search;
-    private MaterialButton btn_search;
     private TextView tv_result_count;
     private  String name ,category, province, district = "";
+    private Handler handler = new Handler();
+    private Runnable searchRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +65,6 @@ public class SearchActivity extends AppCompatActivity {
         btn_filter = findViewById(R.id.btn_filter);
         btn_back = findViewById(R.id.btn_back);
         edt_search = findViewById(R.id.edt_search);
-        btn_search = findViewById(R.id.btn_search);
         tv_result_count = findViewById(R.id.tv_result_count);
 
         rv_search_results.setAdapter(adapter);
@@ -88,9 +91,25 @@ public class SearchActivity extends AppCompatActivity {
             filterPopup.show(getSupportFragmentManager(), "FilterBottomSheet");
         });
 
-        btn_search.setOnClickListener(v->{
-            name = edt_search.getText().toString().trim();
-            searchViewModel.setListSearch(name,category,province,district);
+        edt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (searchRunnable != null) {
+                    handler.removeCallbacks(searchRunnable);
+                }
+
+                searchRunnable = () -> {
+                    String text = s.toString();
+                    Log.d("DEBOUNCE", "Search: " + text);
+                    name = edt_search.getText().toString().trim();
+                    searchViewModel.setListSearch(name,category,province,district);
+                };
+
+                handler.postDelayed(searchRunnable, 500);
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
 
         adapter.setOnItemClickListener(new PlaceAdapter.OnItemClickListener() {
@@ -98,7 +117,7 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(Place place) {
                 Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
 
-                intent.putExtra("PLACE_OBJECT",place);
+                intent.putExtra("PLACE_OBJECT", place);
                 startActivity(intent);
             }
         });

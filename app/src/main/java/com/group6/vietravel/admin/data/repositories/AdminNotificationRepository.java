@@ -1,5 +1,9 @@
 package com.group6.vietravel.admin.data.repositories;
 
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.google.firebase.firestore.DocumentSnapshot; // Import mới
@@ -24,18 +28,13 @@ public class AdminNotificationRepository {
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
-                    List<Notification> list = new ArrayList<>();
+
                     if (value != null) {
-                        // SỬA ĐỔI: Duyệt từng document để lấy ID
-                        for (DocumentSnapshot doc : value.getDocuments()) {
-                            Notification n = doc.toObject(Notification.class);
-                            if (n != null) {
-                                n.setId(doc.getId()); // Lưu ID document vào model
-                                list.add(n);
-                            }
-                        }
+                        List<Notification> list = value.toObjects(Notification.class);
+                        notificationsLiveData.postValue(list);
+                        Log.d(TAG, "Đã tải " + list.size() + " thông báo.");
                     }
-                    notificationsLiveData.setValue(list);
+                    else notificationsLiveData.postValue(new ArrayList<>());
                 });
         return notificationsLiveData;
     }
