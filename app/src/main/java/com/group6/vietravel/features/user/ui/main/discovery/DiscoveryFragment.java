@@ -164,12 +164,17 @@ public class DiscoveryFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null && mainActivity.pendingPlaceId != null) {
-            String targetId = mainActivity.pendingPlaceId;
-            highlightLocation(targetId);
-            mainActivity.pendingPlaceId = null;
-        }else getCurrentLocation();
+        getCurrentLocation();
+
+        mainViewModel.getPendingPlaceId().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(s!=null) {
+                    highlightLocation(s);
+                    mainViewModel.pendingPlaceId(null);
+                }
+            }
+        });
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override

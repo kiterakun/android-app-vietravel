@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -37,25 +38,15 @@ import java.util.List;
 public class DetailActivity extends AppCompatActivity {
 
     private DetailViewModel detailViewModel;
-    private ImageView imagePlace;
-    private RatingBar ratingAvg;
-    private TextView namePlaceTextView;
-    private Toolbar back;
-    private MaterialButton btn_favorite;
-    private MaterialButton btn_checkin;
     private ReviewPlaceAdapter adapter;
+    private ImageView imagePlace;
+    private TextView namePlaceTextView, tv_description, tv_address, tv_opening_hours, tv_phone,
+            tv_website_uri, tv_price_range, tv_rating_count, tv_ai_content;
+    private Toolbar back;
+    private MaterialButton btn_favorite, btn_checkin, btn_submit_review, btn_map;
     private RecyclerView rv_reviews;
-    private TextView tv_description;
-    private TextView tv_address;
-    private TextView tv_opening_hours;
-    private TextView tv_phone;
-    private TextView tv_website_uri;
     private TextInputEditText edt_comment;
-    private RatingBar rb_user_rating;
-    private TextView tv_price_range;
-    private TextView tv_rating_count;
-    private MaterialButton btn_submit_review;
-    private MaterialButton btn_map;
+    private RatingBar rb_user_rating, ratingAvg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +56,22 @@ public class DetailActivity extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        View root = findViewById(R.id.main);
+
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+
+            v.setPadding(
+                    systemBars.left,
+                    systemBars.top,
+                    systemBars.right,
+                    Math.max(systemBars.bottom, ime.bottom)
+            );
+
             return insets;
         });
 
@@ -88,6 +95,7 @@ public class DetailActivity extends AppCompatActivity {
         tv_rating_count = findViewById(R.id.tv_rating_count);
         btn_submit_review = findViewById(R.id.btn_submit_review);
         btn_map = findViewById(R.id.btn_map);
+        tv_ai_content = findViewById(R.id.tv_ai_content);
 
         Intent intent = getIntent();
         Place place = intent.getParcelableExtra("PLACE_OBJECT");
@@ -132,6 +140,15 @@ public class DetailActivity extends AppCompatActivity {
             new_intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             startActivity(new_intent);
+        });
+
+        detailViewModel.setAiReview(place);
+
+        detailViewModel.getAiReview().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                tv_ai_content.setText(s);
+            }
         });
 
         back.setOnClickListener(v->{

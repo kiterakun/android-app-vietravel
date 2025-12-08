@@ -9,25 +9,30 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.group6.vietravel.core.utils.GeminiUtils;
 import com.group6.vietravel.data.models.place.Place;
 import com.group6.vietravel.data.models.review.Review;
 import com.group6.vietravel.data.repositories.place.PlaceRepository;
 import com.group6.vietravel.data.repositories.review.ReviewRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class DetailViewModel extends AndroidViewModel {
     private final PlaceRepository placeRepository;
     private  final ReviewRepository reviewRepository;
-
     private final MutableLiveData<Place> placeMutableLiveData;
+    private final MutableLiveData<String> aiReview;
+    private final GeminiUtils geminiUtils;
 
     public DetailViewModel(Application application) {
         super(application);
         placeRepository = PlaceRepository.getInstance(application.getApplicationContext());
         reviewRepository = ReviewRepository.getInstance();
-        placeMutableLiveData =new MutableLiveData<>();
+        placeMutableLiveData = new MutableLiveData<>();
+        aiReview = new MutableLiveData<>();
+        geminiUtils = new GeminiUtils();
     }
 
     public LiveData<Place> getPlace(){
@@ -64,7 +69,7 @@ public class DetailViewModel extends AndroidViewModel {
             Log.e("addRatingPlace","Place null");
             return;
         }
-        Review review = new Review(comment, place.getPlaceId(), rating, "pending", user.getUid());
+        Review review = new Review(comment, place.getPlaceId(), rating, "approved", user.getUid());
         reviewRepository.saveNewReviewPlace(review);
 
 //        int rating_count = place.getRatingCount();
@@ -85,6 +90,30 @@ public class DetailViewModel extends AndroidViewModel {
         return false;
     }
 
+    public void setAiReview(Place place){
+        aiReview.postValue("Đang tổng hợp đánh giá, đợi chút nhé...");
+
+        geminiUtils.getReview(place, new GeminiUtils.AiCallbackReview() {
+            @Override
+            public void onSuccess(String response) {
+                aiReview.postValue(response);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+                if (t.getMessage() != null && t.getMessage().contains("429")) {
+                    aiReview.postValue("Hệ thống đang quá tải, vui lòng thử lại sau 1 phút nhé!");
+                } else {
+                    aiReview.postValue("Xin lỗi, tôi đang gặp sự cố kết nối: " + t.getMessage());
+                }
+
+                // In log để debug
+                Log.e("ChatViewModel", "AI Error", t);
+            }
+        });
+    }
+
     public void addFavorite(Place place){
         placeRepository.addFavorite(place.getPlaceId());
     }
@@ -99,5 +128,9 @@ public class DetailViewModel extends AndroidViewModel {
 
     public void removeVisited(Place place){
         placeRepository.removeVisited(place.getPlaceId());
+    }
+
+    public LiveData<String> getAiReview() {
+        return aiReview;
     }
 }

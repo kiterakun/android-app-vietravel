@@ -29,16 +29,12 @@ import com.group6.vietravel.R;
 import com.group6.vietravel.data.models.place.Place;
 import com.group6.vietravel.databinding.ActivityMainBinding;
 import com.group6.vietravel.features.user.ui.detail.DetailActivity;
-import com.group6.vietravel.features.user.ui.main.discovery.DiscoveryFragment;
-import com.group6.vietravel.features.user.ui.main.journey.favoriteLocation.FavoriteLocationViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    //testing gitrepo
 
     private ActivityMainBinding binding;
     private MainViewModel mViewModel;
     private BottomNavigationView navView;
-    public String pendingPlaceId = null;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -49,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         String placeId = intent.getStringExtra("TARGET_LOCATION_ID");
 
         if (placeId != null) {
-            this.pendingPlaceId = placeId;
+            mViewModel.pendingPlaceId(placeId);
             navView.setSelectedItemId(R.id.navigation_discovery);
         }
     }
@@ -70,33 +66,15 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_discovery, R.id.navigation_ranking, R.id.navigation_journey, R.id.navigation_account, R.id.navigation_chatbot)
                 .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        // CODE ĐÃ SỬA
-// 1. Lấy NavHostFragment từ FragmentManager
-        androidx.navigation.fragment.NavHostFragment navHostFragment =
-                (androidx.navigation.fragment.NavHostFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.nav_host_fragment_activity_main);
-
-// 2. Lấy NavController từ navHostFragment
-        NavController navController = navHostFragment.getNavController();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        String placeId = getIntent().getStringExtra("TARGET_LOCATION_ID");
-
-        if (placeId != null) {
-            Fragment foundFragment = getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-
-            if (foundFragment instanceof DiscoveryFragment) {
-                ((DiscoveryFragment) foundFragment).highlightLocation(placeId);
-            }
-        }
-
         mViewModel.getSelectedPlace().observe(this, new Observer<Place>() {
             @Override
             public void onChanged(Place place) {
-                Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
 
                 intent.putExtra("PLACE_OBJECT",place);
                 startActivity(intent);

@@ -61,7 +61,7 @@ public class FavoriteLocationFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(FavoriteLocationViewModel.class);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
-        mViewModel.getPlaceList().observe(getViewLifecycleOwner(), new Observer<List<Place>>() {
+        mViewModel.getFavotitePlaceList().observe(getViewLifecycleOwner(), new Observer<List<Place>>() {
             @Override
             public void onChanged(List<Place> places) {
                 adapter.updateData(places);
