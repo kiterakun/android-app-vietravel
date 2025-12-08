@@ -60,7 +60,7 @@ public class AdminPlaceRepository {
         return errorLiveData;
     }
     
-    // Fetch all places (approved and pending)
+    // Change place
     public void fetchAllPlaces() {
         db.collection("places")
             .orderBy("created_at", Query.Direction.DESCENDING)
