@@ -344,12 +344,12 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
         MaterialButton btnReset = dialog.findViewById(R.id.btn_reset_filter);
 
         // Setup dữ liệu cho Spinner
-        android.widget.ArrayAdapter<String> catAdapter = new android.widget.ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, FILTER_CATS);
-        catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        android.widget.ArrayAdapter<String> catAdapter = new android.widget.ArrayAdapter<>(getContext(), R.layout.spinner_item, FILTER_CATS);
+        catAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinCat.setAdapter(catAdapter);
 
-        android.widget.ArrayAdapter<String> priceAdapter = new android.widget.ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, FILTER_PRICES);
-        priceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        android.widget.ArrayAdapter<String> priceAdapter = new android.widget.ArrayAdapter<>(getContext(), R.layout.spinner_item, FILTER_PRICES);
+        priceAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinPrice.setAdapter(priceAdapter);
 
         // Nút Áp dụng
