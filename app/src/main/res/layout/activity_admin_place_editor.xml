@@ -31,6 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hình ảnh (Bắt buộc)"
+                android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -49,23 +50,28 @@
                 android:textColor="@color/_theme" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Tên địa điểm">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+                android:hint="Tên địa điểm"
+                android:textColorHint="#757575"
+                app:hintTextColor="@color/_theme"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="#F5F5F5" > <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_name"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Danh mục:" />
+                android:text="Danh mục:"
+                android:textColor="#757575"/>
 
             <Spinner
                 android:id="@+id/spinner_category"
@@ -75,13 +81,20 @@
                 android:background="@drawable/dropdown_with_arrow" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:hint="Địa chỉ chi tiết">
+                android:hint="Địa chỉ chi tiết"
+                android:textColorHint="#757575"
+                app:hintTextColor="@color/_theme"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="#F5F5F5">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_address"
+                    android:textColor="@color/black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -93,28 +106,42 @@
                 android:layout_marginTop="12dp">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:hint="Latitude">
+                    android:hint="Latitude"
+                    android:textColorHint="#757575"
+                    app:hintTextColor="@color/_theme"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeColor="#F5F5F5">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_lat"
                         android:inputType="numberDecimal|numberSigned"
+                        android:textColor="@color/black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Longitude">
+                    android:hint="Longitude"
+                    android:textColorHint="#757575"
+                    app:hintTextColor="@color/_theme"
+                    app:boxBackgroundColor="#FFFFFF"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeColor="#F5F5F5">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_lng"
                         android:inputType="numberDecimal|numberSigned"
+                        android:textColor="@color/black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -124,7 +151,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Mức giá:" />
+                android:text="Mức giá:"
+                android:textColor="#757575"/>
 
             <!-- Đổi từ btn_dropdown sang custom -->
             <Spinner
@@ -134,17 +162,24 @@
                 android:background="@drawable/dropdown_with_arrow"/>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:hint="Mô tả chi tiết">
+                android:hint="Mô tả chi tiết"
+                android:textColorHint="#757575"
+                app:hintTextColor="@color/_theme"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="#F5F5F5">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_description"
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:gravity="top"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
