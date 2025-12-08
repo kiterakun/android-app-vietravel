@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item
+        android:id="@+id/nav_admin_places"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Quản lý Địa điểm" />
+
+    <item
+        android:id="@+id/nav_admin_reviews"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Kiểm duyệt Review" />
+
+    <item
+        android:id="@+id/nav_admin_users"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Quản lý User" />
+
+    <item
+        android:id="@+id/nav_admin_notifications"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Gửi Thông báo" />
+
+    <item
+        android:id="@+id/nav_admin_logout"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Đăng xuất" />
+
+</menu>

@@ -16,8 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VieTravel">
+
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".features.user.ui.search.SearchActivity"
             android:exported="false" />
 
         <meta-data
@@ -25,16 +26,16 @@
             android:value="AIzaSyDolciswVBQOtQxLZ-ykg8qu5m6ZkUk5S0" />
 
         <activity
-            android:name=".ui.auth.RegisterActivity"
+            android:name=".features.ui.auth.RegisterActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".ui.detail.DetailActivity"
+            android:name=".features.user.ui.detail.DetailActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.VieTravel" />
         <activity
-            android:name=".ui.auth.LoginActivity"
+            android:name=".features.ui.auth.LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.VieTravel"
@@ -46,10 +47,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".features.user.ui.main.MainActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.VieTravel" />
+
+        <activity
+            android:name=".admin.ui.main.AdminMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.ui.notifications.SendNotificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.VieTravel"/>
+        <activity android:name=".admin.ui.places.AdminPlaceEditorActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
     </application>
 
 </manifest>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Admin General -->
+    <string name="admin_title">Admin Panel</string>
+    <string name="admin_login">Admin Login</string>
+    <string name="admin_logout">Đăng xuất</string>
+    
+    <!-- Navigation -->
+    <string name="admin_place_management">Quản lý Địa điểm</string>
+    <string name="admin_review_moderation">Kiểm duyệt Review</string>
+    <string name="admin_user_management">Quản lý User</string>
+    <string name="admin_notifications">Thông báo</string>
+    
+    <!-- Actions -->
+    <string name="admin_add">Thêm mới</string>
+    <string name="admin_edit">Chỉnh sửa</string>
+    <string name="admin_delete">Xóa</string>
+    <string name="admin_approve">Duyệt</string>
+    <string name="admin_reject">Từ chối</string>
+    <string name="admin_save">Lưu</string>
+    <string name="admin_cancel">Hủy</string>
+    <string name="admin_search">Tìm kiếm...</string>
+    <string name="admin_filter">Lọc</string>
+    
+    <!-- Place Management -->
+    <string name="admin_place_name">Tên địa điểm</string>
+    <string name="admin_place_description">Mô tả</string>
+    <string name="admin_place_address">Địa chỉ</string>
+    <string name="admin_place_status">Trạng thái</string>
+    <string name="admin_place_approved">Đã duyệt</string>
+    <string name="admin_place_pending">Chờ duyệt</string>
+    
+    <!-- Review Moderation -->
+    <string name="admin_review_content">Nội dung đánh giá</string>
+    <string name="admin_review_rating">Đánh giá</string>
+    <string name="admin_review_user">Người đánh giá</string>
+    <string name="admin_review_place">Địa điểm</string>
+    <string name="admin_review_status_pending">Chờ duyệt</string>
+    <string name="admin_review_status_approved">Đã duyệt</string>
+    <string name="admin_review_status_rejected">Đã từ chối</string>
+    
+    <!-- User Management -->
+    <string name="admin_user_email">Email</string>
+    <string name="admin_user_username">Tên người dùng</string>
+    <string name="admin_user_role">Vai trò</string>
+    <string name="admin_user_status">Trạng thái</string>
+    <string name="admin_user_points">Điểm</string>
+    <string name="admin_user_lock">Khóa tài khoản</string>
+    <string name="admin_user_unlock">Mở khóa</string>
+    <string name="admin_user_hide">Ẩn</string>
+    <string name="admin_user_restore">Khôi phục</string>
+    <string name="admin_user_status_active">Hoạt động</string>
+    <string name="admin_user_status_locked">Đã khóa</string>
+    <string name="admin_user_status_hidden">Đã ẩn</string>
+    
+    <!-- Notification -->
+    <string name="admin_notification_title">Tiêu đề</string>
+    <string name="admin_notification_message">Nội dung</string>
+    <string name="admin_notification_target">Gửi đến</string>
+    <string name="admin_notification_all">Tất cả người dùng</string>
+    <string name="admin_notification_specific">Người dùng cụ thể</string>
+    <string name="admin_notification_send">Gửi thông báo</string>
+    <string name="admin_notification_history">Lịch sử</string>
+    
+    <!-- Dialogs -->
+    <string name="admin_confirm_delete">Xác nhận xóa</string>
+    <string name="admin_confirm_delete_message">Bạn có chắc muốn xóa? Hành động này không thể hoàn tác.</string>
+    <string name="admin_confirm_approve">Xác nhận duyệt</string>
+    <string name="admin_confirm_reject">Xác nhận từ chối</string>
+    <string name="admin_confirm_lock">Xác nhận khóa tài khoản</string>
+    
+    <!-- Messages -->
+    <string name="admin_success">Thao tác thành công</string>
+    <string name="admin_error">Có lỗi xảy ra</string>
+    <string name="admin_loading">Đang tải...</string>
+    <string name="admin_no_data">Không có dữ liệu</string>
+    <string name="admin_permission_denied">Bạn không có quyền Admin</string>
+</resources>
