@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.group6.vietravel.core.utils.GeminiUtils;
+import com.group6.vietravel.core.utils.GroqUtils;
 import com.group6.vietravel.data.models.place.Place;
 import com.group6.vietravel.data.models.review.Review;
 import com.group6.vietravel.data.repositories.place.PlaceRepository;
@@ -26,6 +27,8 @@ public class DetailViewModel extends AndroidViewModel {
     private final MutableLiveData<String> aiReview;
     private final GeminiUtils geminiUtils;
 
+    private final GroqUtils groqUtils;
+
     public DetailViewModel(Application application) {
         super(application);
         placeRepository = PlaceRepository.getInstance(application.getApplicationContext());
@@ -33,6 +36,7 @@ public class DetailViewModel extends AndroidViewModel {
         placeMutableLiveData = new MutableLiveData<>();
         aiReview = new MutableLiveData<>();
         geminiUtils = new GeminiUtils();
+        groqUtils = new GroqUtils();
     }
 
     public LiveData<Place> getPlace(){
@@ -93,7 +97,10 @@ public class DetailViewModel extends AndroidViewModel {
     public void setAiReview(Place place){
         aiReview.postValue("Đang tổng hợp đánh giá, đợi chút nhé...");
 
-        geminiUtils.getReview(place, new GeminiUtils.AiCallbackReview() {
+//        groqUtils.getReview(place, new GroqUtils.AiCallbackReview()
+//        geminiUtils.getReview(place, new GeminiUtils.AiCallbackReview()
+
+        groqUtils.getReview(place, new GroqUtils.AiCallbackReview() {
             @Override
             public void onSuccess(String response) {
                 aiReview.postValue(response);
