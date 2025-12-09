@@ -17,6 +17,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.group6.vietravel.R;
 import com.group6.vietravel.data.models.place.Place;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHolder> {
@@ -42,7 +43,16 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
     }
 
     public void updateData(List<Place> newPlaces) {
-        this.placeList = newPlaces;
+        if (this.placeList == null) {
+            this.placeList = new ArrayList<>();
+        }
+
+        this.placeList.clear();
+
+        if (newPlaces != null) {
+            this.placeList.addAll(newPlaces);
+        }
+
         notifyDataSetChanged();
     }
 

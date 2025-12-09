@@ -15,6 +15,7 @@ import com.group6.vietravel.R;
 import com.group6.vietravel.data.models.place.Place;
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> {
@@ -40,7 +41,16 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
     }
 
     public void updateData(List<Place> newPlaces) {
-        this.placeList = newPlaces;
+        if (this.placeList == null) {
+            this.placeList = new ArrayList<>();
+        }
+
+        this.placeList.clear();
+
+        if (newPlaces != null) {
+            this.placeList.addAll(newPlaces);
+        }
+
         notifyDataSetChanged();
     }
 
