@@ -62,7 +62,7 @@
             android:exported="false"
             android:theme="@style/Theme.VieTravel"/>
         <activity android:name=".admin.ui.places.AdminPlaceEditorActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustPan"/>
 
     </application>
 

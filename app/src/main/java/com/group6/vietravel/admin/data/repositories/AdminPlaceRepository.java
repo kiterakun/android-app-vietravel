@@ -76,7 +76,35 @@ public class AdminPlaceRepository {
                 }
             });
     }
-    
+
+    //Lấy danh sách địa điểm theo bộ lọc
+    public void fetchFilteredPlaces(String categoryId, String priceRange)
+    {
+        Query query = db.collection("places");
+
+        if(categoryId!= null && !categoryId.equals("all") && !categoryId.isEmpty())
+        {
+            query = query.whereEqualTo("category_id", categoryId);
+        }
+
+        if(priceRange!= null && !priceRange.equals("Tất cả"))
+        {
+            query = query.whereEqualTo("price_range", priceRange);
+        }
+
+        query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (queryDocumentSnapshots != null) {
+                List<Place> filteredList = queryDocumentSnapshots.toObjects(Place.class);
+                allPlacesLiveData.postValue(filteredList);
+
+                Log.d(TAG, "Đã lọc được: " + filteredList.size() + " địa điểm");
+            }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Lỗi khi lọc: ", e);
+            errorLiveData.postValue("Lỗi lọc dữ liệu: " + e.getMessage());
+        });
+    }
+
     // Fetch pending places (waiting approval)
     public void fetchPendingPlaces() {
         db.collection("places")

@@ -69,4 +69,12 @@ public class PlaceManagementViewModel extends AndroidViewModel {
     public void resetStatus() {
         repository.resetStatus();
     }
+
+    public void filterPlacesOnServer(String categoryId, String priceRange) {
+        repository.fetchFilteredPlaces(categoryId, priceRange);
+    }
+
+    public void reloadOriginalList() {
+        repository.fetchAllPlaces();
+    }
 }

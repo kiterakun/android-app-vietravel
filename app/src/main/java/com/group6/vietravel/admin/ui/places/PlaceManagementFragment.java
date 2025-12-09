@@ -68,9 +68,12 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
     private boolean isMapView = false; // Biến cờ: đang xem map hay list?
     private List<Place> currentPlaceList = new ArrayList<>(); // Lưu list để hiển thị lên Map
 
-    private final String[] FILTER_CATS = {"Tất cả", "Vui chơi", "Ăn uống", "Tâm linh", "Thiên nhiên", "Lịch sử"};
-    private final String[] FILTER_CAT_IDS = {"all", "entertainment", "food", "spiritual", "nature", "history"};
+    private final String[] FILTER_CATS = {"Tất cả", "Vui chơi", "Ăn uống", "Tâm linh", "Thiên nhiên", "Lịch sử", "Mua sắm"};
+    private final String[] FILTER_CAT_IDS = {"all", "entertainment", "food", "religious", "nature", "historical", "shopping"};
     private final String[] FILTER_PRICES = {"Tất cả", "Thấp", "Trung bình", "Cao"};
+
+    private String currentFilterCatId = "all";
+    private String currentFilterPrice = "Tất cả";
 
     @Nullable
     @Override
@@ -163,7 +166,6 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
 
         btnFilter.setOnClickListener(v -> {
             showFilterDialog();
-            Toast.makeText(getContext(), "Chức năng Filter (Coming soon)", Toast.LENGTH_SHORT).show();
         });
 
         // Toggle Logic: Chuyển đổi Map <-> List
@@ -316,7 +318,6 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
         } else {
             String query = text.toLowerCase().trim();
             for (Place item : fullList) {
-                // Lọc theo Tên hoặc Địa chỉ
                 if (item.getName().toLowerCase().contains(query) ||
                         item.getAddress().toLowerCase().contains(query)) {
                     filteredList.add(item);
@@ -352,21 +353,44 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
         priceAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinPrice.setAdapter(priceAdapter);
 
+        // [FIX LỖI UI]: Restore lại trạng thái cũ cho Spinner Category
+        for (int i = 0; i < FILTER_CAT_IDS.length; i++) {
+            if (FILTER_CAT_IDS[i].equals(currentFilterCatId)) {
+                spinCat.setSelection(i);
+                break;
+            }
+        }
+
+        // [FIX LỖI UI]: Restore lại trạng thái cũ cho Spinner Price
+        for (int i = 0; i < FILTER_PRICES.length; i++) {
+            if (FILTER_PRICES[i].equals(currentFilterPrice)) {
+                spinPrice.setSelection(i);
+                break;
+            }
+        }
+
         // Nút Áp dụng
         btnApply.setOnClickListener(v -> {
             int catPos = spinCat.getSelectedItemPosition();
             int pricePos = spinPrice.getSelectedItemPosition();
 
-            String selectedCatId = FILTER_CAT_IDS[catPos];
-            String selectedPrice = FILTER_PRICES[pricePos];
+            currentFilterCatId = FILTER_CAT_IDS[catPos];
+            currentFilterPrice = FILTER_PRICES[pricePos];
 
-            applyFilter(selectedCatId, selectedPrice);
+            applyFilter(currentFilterCatId, currentFilterPrice);
             dialog.dismiss();
         });
 
         // Nút Reset
         btnReset.setOnClickListener(v -> {
-            applyFilter("all", "Tất cả");
+
+            currentFilterCatId = "all";
+            currentFilterPrice = "Tất cả";
+
+            spinCat.setSelection(0);
+            spinPrice.setSelection(0);
+
+            viewModel.reloadOriginalList();
             dialog.dismiss();
         });
 
@@ -375,26 +399,7 @@ public class PlaceManagementFragment extends Fragment implements OnMapReadyCallb
 
     // Hàm xử lý logic lọc
     private void applyFilter(String catId, String price) {
-        List<Place> fullList = viewModel.getAllPlaces().getValue();
-        if (fullList == null) return;
-
-        List<Place> filtered = new ArrayList<>();
-
-        for (Place p : fullList) {
-            boolean matchCat = catId.equals("all") || (p.getCategoryId() != null && p.getCategoryId().equals(catId));
-            boolean matchPrice = price.equals("Tất cả") || (p.getPriceRange() != null && p.getPriceRange().equals(price));
-
-            if (matchCat && matchPrice) {
-                filtered.add(p);
-            }
-        }
-
-        // Cập nhật UI
-        currentPlaceList = filtered;
-        adapter.setPlaces(filtered);
-        updateMapMarkers(filtered);
-
-        String message = "Đã lọc: " + filtered.size() + " kết quả";
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Đang tìm kiếm...", Toast.LENGTH_SHORT).show();
+        viewModel.filterPlacesOnServer(catId, price);
     }
 }
