@@ -91,6 +91,8 @@ public class SearchActivity extends AppCompatActivity {
             filterPopup.show(getSupportFragmentManager(), "FilterBottomSheet");
         });
 
+        searchViewModel.setListSearch(name,category,province,district);
+
         edt_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
