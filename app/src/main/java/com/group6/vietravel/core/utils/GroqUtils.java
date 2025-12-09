@@ -31,8 +31,9 @@ public class GroqUtils {
     private static final String API_KEY = "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";
     private static final String BASE_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-    //llama-3.1-8b-instant nhanh hơn =))
-    private static final String MODEL_ID = "openai/gpt-oss-120b";
+    //llama-3.1-8b-instant nhanh hơn nhưng ngoo hơn =))
+    private static final String MODEL_ID1 = "openai/gpt-oss-120b";
+    private static final String MODEL_ID2 = "llama-3.1-8b-instant";
 
     private final OkHttpClient client;
     private final Gson gson;
@@ -85,7 +86,7 @@ public class GroqUtils {
                 ,placesContext.toString(),userQuery
         );
 
-        callGroqApi(systemPrompt, userContent, new ApiInternalCallback() {
+        callGroqApi(systemPrompt, userContent, MODEL_ID1, new ApiInternalCallback() {
             @Override
             public void onResponse(String jsonResponseString) {
                 try {
@@ -129,13 +130,12 @@ public class GroqUtils {
 
                         // System Prompt
                         String systemPrompt = "Bạn là một trợ lý đánh giá các địa điểm của VieTravel.\n" +
-                                "%s\n" +
                                 "YÊU CẦU:\n" +
                                 "1. Trả lời thân thiện và khoảng 30 chữ, bằng tiếng Việt.\n" +
-                                "2. Hãy tổng hợp từ danh sách trên và tìm kiếm thông tin về địa điểm" + place.getName() + "sau đó đưa ra đánh giá phù hợp NHẤT cho địa điểm và một chút thông tin nổi bật của địa điểm này.\n" +
+                                "2. Hãy tổng hợp từ danh sách các bình luận và tìm kiếm thông tin về địa điểm" + place.getName() + "sau đó đưa ra đánh giá phù hợp NHẤT cho địa điểm và một chút thông tin nổi bật của địa điểm này.\n" +
                                 "QUAN TRỌNG: Trả về JSON thuần túy: { \"message\": \"...\" }";
 
-                        callGroqApi(systemPrompt, reviewsContext.toString(), new ApiInternalCallback() {
+                        callGroqApi(systemPrompt, reviewsContext.toString(),MODEL_ID2, new ApiInternalCallback() {
                             @Override
                             public void onResponse(String jsonResponseString) {
                                 try {
@@ -167,7 +167,7 @@ public class GroqUtils {
         void onFailure(Throwable t);
     }
 
-    private void callGroqApi(String systemPrompt, String userContent, ApiInternalCallback internalCallback) {
+    private void callGroqApi(String systemPrompt, String userContent, String MODEL_ID, ApiInternalCallback internalCallback) {
         try {
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("model", MODEL_ID);
