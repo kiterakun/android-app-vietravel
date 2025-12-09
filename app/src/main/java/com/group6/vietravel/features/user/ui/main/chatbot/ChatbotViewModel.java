@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.group6.vietravel.core.utils.GeminiUtils;
+import com.group6.vietravel.core.utils.GroqUtils;
 import com.group6.vietravel.data.models.ai.AiResponse;
 
 import com.group6.vietravel.data.models.place.Place;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ChatbotViewModel extends AndroidViewModel {
 
     private final GeminiUtils geminiUtils;
+    private final GroqUtils groqUtils;
     private final PlaceRepository placeRepository;
     private final AuthRepository authRepository;
     private List<Place> cachedPlaces = new ArrayList<>();
@@ -33,6 +35,7 @@ public class ChatbotViewModel extends AndroidViewModel {
     public ChatbotViewModel(@NonNull Application application) {
         super(application);
         geminiUtils = new GeminiUtils();
+        groqUtils = new GroqUtils();
         placeRepository = PlaceRepository.getInstance(application.getApplicationContext());
         authRepository = AuthRepository.getInstance();
 
@@ -52,7 +55,10 @@ public class ChatbotViewModel extends AndroidViewModel {
 
         botMessageLiveData.postValue(new Pair<>("Đang tải, đợi xíu nhé...",new ArrayList<>()));
 
-        geminiUtils.getRecommendation(userText, cachedPlaces, new GeminiUtils.AiCallback() {
+//        groqUtils.getRecommendation(userText, cachedPlaces, new GroqUtils.AiCallback()
+//        geminiUtils.getRecommendation(userText, cachedPlaces, new GeminiUtils.AiCallback()
+
+        groqUtils.getRecommendation(userText, cachedPlaces, new GroqUtils.AiCallback() {
             @Override
             public void onSuccess(AiResponse response) {
                 isLoading.postValue(false);
