@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.journey.JourneyFragment">
+    tools:context=".features.user.ui.main.journey.JourneyFragment">
 
 
     <LinearLayout
@@ -12,104 +12,104 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical">
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_blue_rounded_corners_8dp"
             android:paddingVertical="24dp"
             android:paddingHorizontal="16dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/imageBack"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@drawable/ic_back"
-                    android:scaleType="fitXY"
-                    />
+            android:layout_marginBottom="10dp">
 
-                <TextView
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:text="Hành Trình"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_title_journey"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/imageAvatar"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_marginEnd="12dp"
-                    android:src="@mipmap/ic_launcher"
-                    android:scaleType="fitXY"
-                    />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/textName"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="14dp"
-                        android:layout_marginStart="1dp"
-                        android:layout_marginEnd="54dp"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="Nguyễn Minh Hoàng"
-                        />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <ImageView
-                            android:id="@+id/imageRank"
-                            android:layout_width="14dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="9dp"
-                            android:src="@drawable/ic_journey_rankmaster"
-                            android:scaleType="fitXY"
-                            />
-                        <TextView
-                            android:id="@+id/textRank"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="33dp"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="Rank cao thủ"
-                            />
-                        <TextView
-                            android:id="@+id/textPoint"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="Điểm du lịch: 500"
-                            />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+                android:text="Hành Trình"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageAvatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="24dp"
+                android:src="@mipmap/ic_launcher"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title_journey" />
+
+            <TextView
+                android:id="@+id/textName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Nguyễn Minh Hoàng"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintBottom_toTopOf="@+id/textRank"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageAvatar"
+                app:layout_constraintTop_toTopOf="@+id/imageAvatar"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <ImageView
+                android:id="@+id/imageRank"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_journey_rankmaster"
+                app:layout_constraintBottom_toBottomOf="@+id/imageAvatar"
+                app:layout_constraintStart_toStartOf="@+id/textName"
+                app:layout_constraintTop_toBottomOf="@+id/textName" />
+
+            <TextView
+                android:id="@+id/textRank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="Rank cao thủ"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:alpha="0.9"
+                app:layout_constraintBottom_toBottomOf="@+id/imageRank"
+                app:layout_constraintStart_toEndOf="@+id/imageRank"
+                app:layout_constraintTop_toTopOf="@+id/imageRank" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="•"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/textRank"
+                app:layout_constraintStart_toEndOf="@+id/textRank"
+                app:layout_constraintTop_toTopOf="@+id/textRank"/>
+
+            <TextView
+                android:id="@+id/textPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Điểm: 500"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/textRank"
+                app:layout_constraintStart_toEndOf="@+id/textRank"
+                app:layout_constraintTop_toTopOf="@+id/textRank"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
