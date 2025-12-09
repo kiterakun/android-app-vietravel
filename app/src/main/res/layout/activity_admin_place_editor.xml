@@ -59,11 +59,12 @@
                 app:hintTextColor="@color/_theme"
                 app:boxBackgroundColor="#FFFFFF"
                 app:boxStrokeWidth="1dp"
-                app:boxStrokeColor="#F5F5F5" > <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_name"
-                android:textColor="@color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                app:boxStrokeColor="#F5F5F5" >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
