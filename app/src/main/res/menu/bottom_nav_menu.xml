@@ -23,7 +23,7 @@
 
     <item
         android:id="@+id/navigation_chatbot"
-        android:icon="@drawable/ic_chatbot"
+        android:icon="@drawable/ic_chatbot1"
         android:title="Chatbot" />
 
 </menu>
