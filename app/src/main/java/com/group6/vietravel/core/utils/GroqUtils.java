@@ -28,7 +28,7 @@ import okhttp3.Response;
 public class GroqUtils {
 
     private static final String TAG = "GroqUtils";
-    private static final String API_KEY = "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";
+    private static final String API_KEY = "your_api_key_here";
     private static final String BASE_URL = "https://api.groq.com/openai/v1/chat/completions";
 
     //llama-3.1-8b-instant nhanh hơn nhưng ngoo hơn =))

@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 public class GeminiUtils {
 
     private static final String TAG = "GeminiUtils";
-    private static final String API_KEY = "AIzaSyDEtE45fTSCCNZNRo2-PG3WiRa9evA_jUU";
+    private static final String API_KEY = "your_api_key_here";
 
     private final GenerativeModelFutures model;
     private final Gson gson;
